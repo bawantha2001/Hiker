@@ -40,7 +40,7 @@ class _Login extends State<Login> {
     mediasize=MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1F22),
+      backgroundColor: const Color(0xFF5b7cff),
       body: Stack(children: [
         Positioned(top: 0,
             left: 50,
@@ -57,8 +57,9 @@ class _Login extends State<Login> {
       width: mediasize.width,
       child:
       Opacity(
-        opacity: 0.8,
+        opacity: 1,
         child: Card(
+          color: Color(0xFFffffff),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
@@ -77,7 +78,7 @@ class _Login extends State<Login> {
   Widget buildtop(){
     return Column(
       children: <Widget>[
-        Image.asset('assets/images/1.png', // Replace with your image asset
+        Image.asset('assets/images/5.png', // Replace with your image asset
       fit: BoxFit.fill),
     ],
     );
@@ -88,13 +89,14 @@ class _Login extends State<Login> {
       width: mediasize.width,
       child:
       Opacity(
-        opacity: 0.8,
+        opacity: 1,
         child: Card(
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
-              )
+              ),
+
           ),
           child: Padding(
             padding: const EdgeInsets.all(25.0),
@@ -114,7 +116,7 @@ class _Login extends State<Login> {
           child:Text(
             "LOGIN",
             style: TextStyle(
-            color: Colors.green,
+            color: Color(0xFF5b7cff),
             fontSize: 32,
             fontWeight: FontWeight.w500
         ),
@@ -165,7 +167,7 @@ class _Login extends State<Login> {
             enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20.0),
                 borderSide: const BorderSide(
-                  color: Colors.blue,
+                  color: Colors.black,
                 )
             ),
           ),
@@ -189,7 +191,7 @@ class _Login extends State<Login> {
               MaterialPageRoute(builder: (context)=> const ForgotPasswordPage()));
         },
           style: TextButton.styleFrom(
-            foregroundColor: Colors.green
+            foregroundColor: Color(0xFF5b7cff)
           ),
           child: const Text(" Forgot password"),
         ),
@@ -202,10 +204,9 @@ class _Login extends State<Login> {
       checksignin();
     },
       style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
-        elevation: 20,
-        backgroundColor: Colors.green,
-        shadowColor: Colors.green,
+        elevation: 10,
+        backgroundColor: Color(0xFF5b7cff),
+        shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
       ),
     child: isLoading? const Row(mainAxisAlignment: MainAxisAlignment.center,
@@ -221,12 +222,12 @@ class _Login extends State<Login> {
   Widget buildsignupButton(){
     return ElevatedButton(onPressed: (){
       checkSignup();
+
     },
       style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
-        elevation: 20,
-        backgroundColor: Colors.green,
-        shadowColor: Colors.green,
+        elevation: 10,
+        backgroundColor: Color(0xFF5b7cff),
+        shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
       ),
       child: isLoading? const Row(mainAxisAlignment: MainAxisAlignment.center,
@@ -247,7 +248,7 @@ class _Login extends State<Login> {
             toggle_form();
         },
             style: TextButton.styleFrom(
-              foregroundColor: Colors.green,
+              foregroundColor: Color(0xFF5b7cff),
             ),
             child: const Text("Create an account")),
       ],
@@ -263,7 +264,7 @@ class _Login extends State<Login> {
           toggle_form();
         },
             style: TextButton.styleFrom(
-              foregroundColor: Colors.green,
+              foregroundColor: Color(0xFF5b7cff),
             ),
             child: const Text("LOGIN")),
       ],
@@ -276,7 +277,7 @@ class _Login extends State<Login> {
       children: [
         const Center(
           child: Text("Signup",style: TextStyle(
-            color: Colors.green,
+            color: Color(0xFF5b7cff),
             fontSize: 32,
             fontWeight: FontWeight.w500
         ),

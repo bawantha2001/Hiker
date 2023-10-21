@@ -43,7 +43,7 @@ Future <void> passwordReset() async{
   Widget build(BuildContext context) {
     mediasize=MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xFF1E1F22),
+      backgroundColor: const Color(0xFF5b7cff),
         body:
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -64,9 +64,10 @@ Future <void> passwordReset() async{
       children: [
         SizedBox(
           width: mediasize.width,
+          height: 350.0,
           child:
             Opacity(
-              opacity: 0.8,
+              opacity: 1.0,
               child: Card(
                 shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.only(
@@ -89,13 +90,14 @@ Future <void> passwordReset() async{
 
   Widget buildForm(){
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
          const Center(
            child: Text(
               "Reset Password",
               style: TextStyle(
-                  color: Colors.green,
+                  color: Color(0xFF5b7cff),
                   fontSize: 32,
                   fontWeight: FontWeight.w500
               ),
@@ -113,9 +115,8 @@ Future <void> passwordReset() async{
   Widget buildResetButton(){
     return ElevatedButton(onPressed: passwordReset,
       style: ElevatedButton.styleFrom(
-        shape: const StadiumBorder(),
         elevation: 10,
-        backgroundColor: Colors.green,
+        backgroundColor: Color(0xFF5b7cff),
         minimumSize: Size.fromHeight(50),
       ),
       child: const Text("Reset"),
@@ -138,7 +139,7 @@ Future <void> passwordReset() async{
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
               borderSide: const BorderSide(
-                color: Colors.blue,
+                color: Colors.black,
               )
           ),
         ),
