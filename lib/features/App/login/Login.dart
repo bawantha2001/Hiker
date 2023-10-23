@@ -16,28 +16,47 @@ class Login extends StatefulWidget {
 }
 
 class _Login extends State<Login> {
-  final FirebaseAuthService _auth=FirebaseAuthService();
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final FirebaseAuth firebaseAuth=FirebaseAuth.instance;
 
-  bool isLoading=false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    firebaseAuth.authStateChanges().listen((User? user) {
+      if (user == null) {
+      } else {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const home()));
+      }
+    });
+  }
+
+  bool isLoading = false;
   late Color myColor;
   late Size mediasize;
-  TextEditingController emailController=TextEditingController();
-  TextEditingController passwordController=TextEditingController();
-  TextEditingController confirmpasswordController=TextEditingController();
-  bool remember =false;
-  bool showForm =true;
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmpasswordController = TextEditingController();
+  bool remember = false;
+  bool showForm = true;
 
-  void toggle_form(){
+  void toggle_form() {
     setState(() {
-      showForm=!showForm;
+      showForm = !showForm;
     });
-
   }
+
 
   @override
   Widget build(BuildContext context) {
-    myColor=Theme.of(context).primaryColor;
-    mediasize=MediaQuery.of(context).size;
+    myColor = Theme
+        .of(context)
+        .primaryColor;
+    mediasize = MediaQuery
+        .of(context)
+        .size;
 
     return Scaffold(
       backgroundColor: const Color(0xFF5b7cff),
@@ -52,7 +71,7 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildbottom(){
+  Widget buildbottom() {
     return SizedBox(
       width: mediasize.width,
       child:
@@ -75,52 +94,52 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildtop(){
+  Widget buildtop() {
     return Column(
       children: <Widget>[
         Image.asset('assets/images/5.png', // Replace with your image asset
-      fit: BoxFit.fill),
-    ],
+            fit: BoxFit.fill),
+      ],
     );
   }
 
-  Widget buildbottom2(){
+  Widget buildbottom2() {
     return SizedBox(
-      width: mediasize.width,
-      child:
-      Opacity(
-        opacity: 1,
-        child: Card(
-          shape: const RoundedRectangleBorder(
+        width: mediasize.width,
+        child:
+        Opacity(
+          opacity: 1,
+          child: Card(
+            shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
               ),
 
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: buildsignupForm(),
+            ),
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: buildsignupForm(),
-          ),
-        ),
-      )
+        )
 
     );
   }
 
-  Widget buildForm(){
+  Widget buildForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Center(
-          child:Text(
+          child: Text(
             "LOGIN",
             style: TextStyle(
-            color: Color(0xFF5b7cff),
-            fontSize: 32,
-            fontWeight: FontWeight.w500
-        ),
-        ),
+                color: Color(0xFF5b7cff),
+                fontSize: 32,
+                fontWeight: FontWeight.w500
+            ),
+          ),
         ),
         Center(
           child: buildGreyText("Please login with your information"),
@@ -129,7 +148,7 @@ class _Login extends State<Login> {
         buildGreyText("Email address"),
         buildInputField(emailController),
         buildGreyText("Password"),
-        buildInputField(passwordController,isPassword: true),
+        buildInputField(passwordController, isPassword: true),
         buildRemember(),
         const SizedBox(height: 10),
         buildLoginButton(),
@@ -142,48 +161,49 @@ class _Login extends State<Login> {
       ],
     );
   }
-  
-  Widget buildGreyText(String text){
-    return Text(text,style: const TextStyle(
-      color: Colors.black
+
+  Widget buildGreyText(String text) {
+    return Text(text, style: const TextStyle(
+        color: Colors.black
     ),);
   }
 
   Widget buildInputField(TextEditingController controller,
-  {isPassword=false}){
+      {isPassword = false}) {
     return SizedBox(
       height: 50,
-        child: TextField(
-          controller: controller,
-          style: TextField.materialMisspelledTextStyle,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20.0),
-                borderSide: const BorderSide(
-                  color: Colors.black,
-                )
-            ),
+      child: TextField(
+        controller: controller,
+        style: TextField.materialMisspelledTextStyle,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
           ),
-          obscureText: isPassword,
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: const BorderSide(
+                color: Colors.black,
+              )
+          ),
         ),
+        obscureText: isPassword,
+      ),
     );
   }
 
-  Widget buildRemember(){
+  Widget buildRemember() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        TextButton(onPressed: (){
+        TextButton(onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context)=> const ForgotPasswordPage()));
+              MaterialPageRoute(
+                  builder: (context) => const ForgotPasswordPage()));
         },
           style: TextButton.styleFrom(
-            foregroundColor: Color(0xFF5b7cff)
+              foregroundColor: Color(0xFF5b7cff)
           ),
           child: const Text(" Forgot password"),
         ),
@@ -191,8 +211,8 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildLoginButton(){
-    return ElevatedButton(onPressed: (){
+  Widget buildLoginButton() {
+    return ElevatedButton(onPressed: () {
       checksignin();
     },
       style: ElevatedButton.styleFrom(
@@ -201,20 +221,19 @@ class _Login extends State<Login> {
         shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
       ),
-    child: isLoading? const Row(mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text("Login....    "),
-        CircularProgressIndicator(color: Colors.white,),
-      ],
-    ): const Text("LOGIN"),
+      child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Login....    "),
+          CircularProgressIndicator(color: Colors.white,),
+        ],
+      ) : const Text("LOGIN"),
 
     );
   }
 
-  Widget buildsignupButton(){
-    return ElevatedButton(onPressed: (){
+  Widget buildsignupButton() {
+    return ElevatedButton(onPressed: () {
       checkSignup();
-
     },
       style: ElevatedButton.styleFrom(
         elevation: 5,
@@ -222,22 +241,22 @@ class _Login extends State<Login> {
         shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
       ),
-      child: isLoading? const Row(mainAxisAlignment: MainAxisAlignment.center,
+      child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Creating account....    "),
           CircularProgressIndicator(color: Colors.white,),
         ],
-      ):const Text("SIGNUP"),
+      ) : const Text("SIGNUP"),
     );
   }
 
-  Widget buildsignup(){
+  Widget buildsignup() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         buildGreyText("Don't you have an account? "),
-        TextButton(onPressed: (){
-            toggle_form();
+        TextButton(onPressed: () {
+          toggle_form();
         },
             style: TextButton.styleFrom(
               foregroundColor: Color(0xFF5b7cff),
@@ -247,12 +266,12 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildlogin(){
+  Widget buildlogin() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         buildGreyText("Do you have an account? "),
-        TextButton(onPressed: (){
+        TextButton(onPressed: () {
           toggle_form();
         },
             style: TextButton.styleFrom(
@@ -263,17 +282,17 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildsignupForm(){
+  Widget buildsignupForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Center(
-          child: Text("Signup",style: TextStyle(
-            color: Color(0xFF5b7cff),
-            fontSize: 32,
-            fontWeight: FontWeight.w500
-        ),
-        ),
+          child: Text("Signup", style: TextStyle(
+              color: Color(0xFF5b7cff),
+              fontSize: 32,
+              fontWeight: FontWeight.w500
+          ),
+          ),
         ),
         Center(
           child:
@@ -283,9 +302,9 @@ class _Login extends State<Login> {
         buildGreyText("Email address"),
         buildInputField(emailController),
         buildGreyText("Password"),
-        buildInputField(passwordController,isPassword: true),
+        buildInputField(passwordController, isPassword: true),
         buildGreyText("Confirm Password"),
-        buildInputField(confirmpasswordController,isPassword: true),
+        buildInputField(confirmpasswordController, isPassword: true),
         const SizedBox(height: 30),
         buildsignupButton(),
         const SizedBox(height: 20),
@@ -294,62 +313,62 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildAnimatedsingup(){
+  Widget buildAnimatedsingup() {
     return Stack(
-        children: [
-          AnimatedPositioned(
-            bottom: showForm ? 0 : -mediasize.height,
-            duration: const Duration(seconds: 1),
-            child: buildbottom(),
-          ),
-          AnimatedPositioned(
-            bottom: !showForm ? 0 : -mediasize.height,
-            duration: const Duration(seconds: 1),
-            child: buildbottom2(),
-          )
-        ],
+      children: [
+        AnimatedPositioned(
+          bottom: showForm ? 0 : -mediasize.height,
+          duration: const Duration(seconds: 1),
+          child: buildbottom(),
+        ),
+        AnimatedPositioned(
+          bottom: !showForm ? 0 : -mediasize.height,
+          duration: const Duration(seconds: 1),
+          child: buildbottom2(),
+        )
+      ],
     );
   }
 
-  void signup (String email,String password)async{
-
-    User? user=await _auth.signUpWithEmailAndPassword(email, password);
-    if(user!=null){
+  void signup(String email, String password) async {
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+    if (user != null) {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       showToast("Account Created Successfully");
-      Navigator.push(context,MaterialPageRoute(builder: (context)=> const home()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const home()));
       toggle_form();
       clear();
     }
-    else{
+    else {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       clear();
       showToast("Process Failed!");
     }
   }
 
-  void checkSignup(){
-    String email=emailController.text;
-    String password= passwordController.text;
-    String confirmPw=confirmpasswordController.text;
+  void checkSignup() {
+    String email = emailController.text;
+    String password = passwordController.text;
+    String confirmPw = confirmpasswordController.text;
 
-    if(password==confirmPw && password!="" && confirmPw!=""){
-      if(password.length>=6){
-
+    if (password == confirmPw && password != "" && confirmPw != "") {
+      if (password.length >= 6) {
         setState(() {
-          isLoading=true;
+          isLoading = true;
         });
 
         signup(email, password);
-      }else{
+      } else {
         showToast("Please Enter Maximum 6 Characters For The Password!");
       }
-    }else{
-      showToast("Please Check The Both Passwords Are Equal and Passwords Are Cannot Be Null!");
+    } else {
+      showToast(
+          "Please Check The Both Passwords Are Equal and Passwords Are Cannot Be Null!");
     }
   }
 
@@ -365,33 +384,33 @@ class _Login extends State<Login> {
     );
   }
 
-  void clear(){
-    emailController.text="";
-    passwordController.text="";
-    confirmpasswordController.text="";
+  void clear() {
+    emailController.text = "";
+    passwordController.text = "";
+    confirmpasswordController.text = "";
   }
 
-  void checksignin(){
-    String email=emailController.text;
-    String password= passwordController.text;
+  void checksignin() {
+    String email = emailController.text;
+    String password = passwordController.text;
 
-    if(email!="" && password!=""){
+    if (email != "" && password != "") {
       setState(() {
-        isLoading=true;
+        isLoading = true;
       });
       signin(email, password);
     }
-    else{
+    else {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       showToast("User error");
     }
   }
 
-  Widget buildGoogle(){
+  Widget buildGoogle() {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         connectGoogle();
       },
       child: Row(
@@ -407,39 +426,40 @@ class _Login extends State<Login> {
     );
   }
 
-  void connectGoogle()async {
+  void connectGoogle() async {
     try {
       GoogleSignInAccount? googleuser = await GoogleSignIn().signIn();
       GoogleSignInAuthentication? googleAuth = await googleuser?.authentication;
 
-      AuthCredential credential=GoogleAuthProvider.credential(
+      AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleAuth?.accessToken,
-          idToken:googleAuth?.idToken);
-      UserCredential userCredential= await FirebaseAuth.instance.signInWithCredential(credential);
-      Navigator.push(context,MaterialPageRoute(builder: (context)=> const home()));
+          idToken: googleAuth?.idToken);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const home()));
     } catch (e) {
       print(e.toString() + " error");
     }
   }
-  void signin (String email,String password)async{
 
-    User? user=await _auth.signInWithEmailAndPassword(email, password);
-    if(user!=null){
+  void signin(String email, String password) async {
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+    if (user != null) {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
-      Navigator.push(context,MaterialPageRoute(builder: (context)=> const home()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const home()));
       toggle_form();
       clear();
     }
-    else{
+    else {
       setState(() {
-        isLoading=false;
+        isLoading = false;
       });
       clear();
       showToast("Login Failed!");
     }
   }
-
-  }
-
+}
