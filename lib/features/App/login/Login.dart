@@ -25,8 +25,7 @@ class _Login extends State<Login> {
     super.initState();
 
     firebaseAuth.authStateChanges().listen((User? user) {
-      if (user == null) {
-      } else {
+      if (user != null) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const home()));
       }

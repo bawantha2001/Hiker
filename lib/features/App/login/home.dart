@@ -79,21 +79,35 @@ class _State extends State<home> {
             ),
           ),
         ),
-        const SizedBox(height: 20,),
-        ElevatedButton(onPressed: (){
-          setState(() {
-            issignout=true;
-          });
-          signOut();
-        },
-            child: issignout? const Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Sign out....    "),
-                CircularProgressIndicator(color: Colors.white,),
-              ],
-            ):const Text("Sign out")),
-      ],
+        Row(
+          children: [
+            const SizedBox(height: 20,),
+            ElevatedButton(onPressed: (){
+              setState(() {
+                issignout=true;
+              });
+              signOut();
+            },
+                child: issignout? const Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Sign out....    "),
+                    CircularProgressIndicator(color: Colors.white,),
+
+                  ],
+                ):const Text("Sign out")),
+
+            const SizedBox(width: 20,),
+            ElevatedButton(onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => const home()));
+            },
+            child:
+              Text("Next"),)
+    ],
+    )
+    ],
     );
+    }
   }
 
   void signOut() async{
