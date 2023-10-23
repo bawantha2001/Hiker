@@ -67,7 +67,7 @@ class _Login extends State<Login> {
               )
           ),
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(20.0),
             child: buildForm(),
           ),
         ),
@@ -99,7 +99,7 @@ class _Login extends State<Login> {
 
           ),
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
+            padding: const EdgeInsets.all(20.0),
             child: buildsignupForm(),
           ),
         ),
@@ -125,15 +125,13 @@ class _Login extends State<Login> {
         Center(
           child: buildGreyText("Please login with your information"),
         ),
-        const SizedBox(height: 40,),
+        const SizedBox(height: 30,),
         buildGreyText("Email address"),
         buildInputField(emailController),
-        const SizedBox(height: 10),
         buildGreyText("Password"),
         buildInputField(passwordController,isPassword: true),
-        const SizedBox(height: 10),
         buildRemember(),
-        const SizedBox(height: 50),
+        const SizedBox(height: 10),
         buildLoginButton(),
         const SizedBox(height: 10),
         const Center(
@@ -178,14 +176,8 @@ class _Login extends State<Login> {
 
   Widget buildRemember(){
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Checkbox(value: remember, onChanged: (value){
-          setState(() {
-            remember=value!;
-          });
-        }),
-        buildGreyText("Remember me    |"),
         TextButton(onPressed: (){
           Navigator.push(context,
               MaterialPageRoute(builder: (context)=> const ForgotPasswordPage()));
@@ -204,7 +196,7 @@ class _Login extends State<Login> {
       checksignin();
     },
       style: ElevatedButton.styleFrom(
-        elevation: 10,
+        elevation: 5,
         backgroundColor: Color(0xFF5b7cff),
         shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
@@ -225,7 +217,7 @@ class _Login extends State<Login> {
 
     },
       style: ElevatedButton.styleFrom(
-        elevation: 10,
+        elevation: 5,
         backgroundColor: Color(0xFF5b7cff),
         shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
@@ -287,18 +279,16 @@ class _Login extends State<Login> {
           child:
           buildGreyText("Please enter your information"),
         ),
-        const SizedBox(height: 40,),
+        const SizedBox(height: 30,),
         buildGreyText("Email address"),
         buildInputField(emailController),
-        const SizedBox(height: 20),
         buildGreyText("Password"),
         buildInputField(passwordController,isPassword: true),
-        const SizedBox(height: 20),
         buildGreyText("Confirm Password"),
         buildInputField(confirmpasswordController,isPassword: true),
-        const SizedBox(height: 40),
+        const SizedBox(height: 30),
         buildsignupButton(),
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
         buildlogin(),
       ],
     );
@@ -408,8 +398,8 @@ class _Login extends State<Login> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           SizedBox(
-            width: 40,
-            height: 40,
+            width: 35,
+            height: 35,
             child: Image.asset("assets/images/2.png"),
           ),
         ],
