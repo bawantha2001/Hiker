@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class place extends StatefulWidget {
@@ -34,13 +33,13 @@ class _placeState extends State<place> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/6.jpg"),
+            image: AssetImage("assets/images/sigiriya.jpg"),
             fit: BoxFit.cover,
           ),
         ),
         child: Column(
           children: [
-            const SizedBox(height: 250,),
+            const SizedBox(height: 320,),
             buildbottom(),
           ],
         )
@@ -52,7 +51,7 @@ class _placeState extends State<place> {
   Widget buildbottom() {
     return SizedBox(
       width: mediasize.width,
-      height: 600,
+      height: 530,
       child:
       Opacity(
         opacity: 1,
@@ -67,7 +66,7 @@ class _placeState extends State<place> {
               )
           ),
           child: Padding(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(15.0),
             child: Column(
               children: [
                 Container(
@@ -76,22 +75,27 @@ class _placeState extends State<place> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child:
-                      Image.asset('assets/images/6.jpg')
+                      Image.asset('assets/images/sigiriya.jpg')
                     ),
                   ),
                 const SizedBox(height: 20),
-                const Text("TITLE",
+                const Text("SIGIRIYA",
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w500
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text("Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla ",
-                  textAlign: TextAlign.justify,)
+                const Text("Sigiriya Lion Rock is an ancient rock fortress known for its massive "
+                    "column of rock that reaches nearly 200 meters high. The site dates back "
+                    "to the reign of King Kasyapa (477-495 AD), who chose this site as his new capital. "
+                    "He decorated the walls with frescoes, and built an impressive palace right on "
+                    "top of the rock column, accessible only through the mouth of an enormous carved lion.",
+                  textAlign: TextAlign.justify,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400
+                ),)
               ],
             )
           ),
