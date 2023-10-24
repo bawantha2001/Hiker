@@ -26,9 +26,9 @@ class _Login extends State<Login> {
 
     firebaseAuth.authStateChanges().listen((User? user) {
       if (user != null) {
+        Navigator.pop(context);
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const home()));
-        this.dispose();
       }
     });
   }
@@ -337,9 +337,9 @@ class _Login extends State<Login> {
         isLoading = false;
       });
       showToast("Account Created Successfully");
+      Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
-      dispose();
       toggle_form();
       clear();
     }
@@ -437,9 +437,9 @@ class _Login extends State<Login> {
           idToken: googleAuth?.idToken);
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
+      Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
-      dispose();
     } catch (e) {
       print(e.toString() + " error");
     }
@@ -452,9 +452,9 @@ class _Login extends State<Login> {
         isLoading = false;
       });
 
+      Navigator.pop(context);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
-      dispose();
       toggle_form();
       clear();
     }

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:self_employer/features/App/intent/place.dart';
 import 'package:self_employer/features/App/login/Login.dart';
 
 class home extends StatefulWidget {
@@ -19,7 +21,6 @@ class _State extends State<home> {
     mediasize = MediaQuery.of(context).size;
     return Scaffold(
       body: Column(
-
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0),
@@ -33,15 +34,16 @@ class _State extends State<home> {
                     padding: const EdgeInsets.all(8.0),
                     child: Center(
                       child: Text(
-                        "Travelers",
+                        "Traveler",
                         style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold
+                            color: Colors.blue,
+                            fontSize: 38.0,
+                            fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
                   ),
+
                   TextField(
                     style:TextStyle(
                         color: Colors.black,
@@ -58,17 +60,19 @@ class _State extends State<home> {
                       prefixIconColor: Colors.black
                     ),
                   ),
+
                   Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Center(
                       child: Text("Most Visited Palces",style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 22.0,
+                        fontSize: 22.0,color: Colors.green,
                       )),
                     ),
                   ),
+
                   SizedBox(
-                    height: 30.0,
+                    height: 10.0,
                   ),
                     ],
                   )
@@ -77,35 +81,34 @@ class _State extends State<home> {
 
           Padding(padding: EdgeInsets.fromLTRB(5.0,0,5.0,0),
             child: Container(
-              height:140,
+              height:250,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  buildCard(),
+                  buildCard("Sigiriya","Polonnaruwa,Sri Lanka",'assets/images/sigiriya.jpg'),
                   SizedBox(width: 12,),
-                  buildCard(),
+                  buildCard("Watadage","Polonnaruwa,Sri Lanka",'assets/images/watadage.jpg'),
                   SizedBox(width: 12,),
-                  buildCard(),
-                  SizedBox(width: 12,),
-                  buildCard(),
-                  SizedBox(width: 12,),
+                  buildCard("Temple of the Tooth","Kandy,Sri Lanka",'assets/images/templeof.jpg'),
                 ],
               ),
             ),
           ),
+
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(10.0),
             child: Container(
               child: SizedBox(
                   child: Text("Place Nearby",style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    fontSize: 22.0,
+                    fontSize: 22.0,color: Colors.green,
                   ),)),
             ),
           ),
+
           Container(
-            width: 400,
-            height: 420,
+            width: mediasize.width,
+            height: mediasize.height-532,
             decoration: BoxDecoration(
               color: Colors.cyan,
               borderRadius: BorderRadius.only(
@@ -113,7 +116,6 @@ class _State extends State<home> {
                 topRight: Radius.circular(25),
               ),
             ),
-
           )
         ],
       ),
@@ -124,13 +126,67 @@ class _State extends State<home> {
           context, MaterialPageRoute(builder: (context) => const Login())));
     }
   }
-  Widget buildCard()=> Container(
-    width: 200,
+
+  Widget buildCard(String placeName,String locationName,String imageName)=> Container(
+    width: 180,
     decoration: BoxDecoration(
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(20),
       border: Border.all(color: Colors.black)
     ),
+    child:
+    Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(imageName,fit: BoxFit.fill,height: 130,width: 180,))
+              ),
+          SizedBox(height: 4,),
+          Text(
+            placeName,
+            style: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4,),
+          Row(
+            children: [
+              Icon(Icons.location_on),
+              Text(
+                locationName,
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          TextButton(onPressed: (){
+            showToast(placeName);
+            Navigator.pop(context);
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => const place()));
+          }, child:
+          Text(
+            'Read More',
+            style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.green),
+          ),
+          ),
+        ],
+      ),
+    ),
   );
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 }
 

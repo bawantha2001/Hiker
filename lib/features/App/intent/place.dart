@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:self_employer/features/App/login/home.dart';
 
 class place extends StatefulWidget {
   const place({super.key});
@@ -29,21 +30,29 @@ class _placeState extends State<place> {
         .of(context)
         .size;
 
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/sigiriya.jpg"),
-            fit: BoxFit.cover,
+    return WillPopScope(
+      onWillPop: () async{
+        Navigator.pop(context);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const home()));
+        return true;
+      },
+      child: Scaffold(
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/sigiriya.jpg"),
+              fit: BoxFit.cover,
+            ),
           ),
+          child: Column(
+            children: [
+              const SizedBox(height: 320,),
+              buildbottom(),
+            ],
+          )
+           /* add child content here */,
         ),
-        child: Column(
-          children: [
-            const SizedBox(height: 320,),
-            buildbottom(),
-          ],
-        )
-         /* add child content here */,
       ),
     );
   }
@@ -51,7 +60,7 @@ class _placeState extends State<place> {
   Widget buildbottom() {
     return SizedBox(
       width: mediasize.width,
-      height: 530,
+      height: mediasize.height-320,
       child:
       Opacity(
         opacity: 1,
@@ -111,5 +120,7 @@ class _placeState extends State<place> {
       child: Text("data")
     );
   }
+
+
   
 }
