@@ -28,6 +28,7 @@ class _Login extends State<Login> {
       if (user != null) {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => const home()));
+        this.dispose();
       }
     });
   }
@@ -338,6 +339,7 @@ class _Login extends State<Login> {
       showToast("Account Created Successfully");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
+      dispose();
       toggle_form();
       clear();
     }
@@ -437,6 +439,7 @@ class _Login extends State<Login> {
           .signInWithCredential(credential);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
+      dispose();
     } catch (e) {
       print(e.toString() + " error");
     }
@@ -448,8 +451,10 @@ class _Login extends State<Login> {
       setState(() {
         isLoading = false;
       });
+
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => const home()));
+      dispose();
       toggle_form();
       clear();
     }

@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:self_employer/features/App/intent/place.dart';
 import 'package:self_employer/features/App/login/Login.dart';
+
 
 class home extends StatefulWidget {
   const home ({super.key});
@@ -12,7 +14,7 @@ class home extends StatefulWidget {
 class _State extends State<home> {
 
   late Size mediasize;
-  bool issignout=false;
+  bool issignout = false;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class _State extends State<home> {
     );
   }
 
-  Widget buildForm(){
+  Widget buildForm() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -82,36 +84,37 @@ class _State extends State<home> {
         Row(
           children: [
             const SizedBox(height: 20,),
-            ElevatedButton(onPressed: (){
+            ElevatedButton(onPressed: () {
               setState(() {
-                issignout=true;
+                issignout = true;
               });
               signOut();
             },
-                child: issignout? const Row(mainAxisAlignment: MainAxisAlignment.center,
+                child: issignout ? const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text("Sign out....    "),
                     CircularProgressIndicator(color: Colors.white,),
 
                   ],
-                ):const Text("Sign out")),
+                ) : const Text("Sign out")),
 
             const SizedBox(width: 20,),
             ElevatedButton(onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => const home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const place()));
+              dispose();
             },
-            child:
+              child:
               Text("Next"),)
-    ],
-    )
-    ],
+          ],
+        )
+      ],
     );
-    }
   }
 
-  void signOut() async{
-    await FirebaseAuth.instance.signOut().then((value) => Navigator.push(context, MaterialPageRoute(builder: (context)=> const Login())));
+  void signOut() async {
+    await FirebaseAuth.instance.signOut().
+    then((value) => Navigator.push(context,MaterialPageRoute(builder: (context) => const Login())));
   }
-
 }
