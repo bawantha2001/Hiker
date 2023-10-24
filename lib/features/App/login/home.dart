@@ -103,6 +103,18 @@ class _State extends State<home> {
                   ),)),
             ),
           ),
+          Container(
+            width: 400,
+            height: 420,
+            decoration: BoxDecoration(
+              color: Colors.cyan,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25),
+                topRight: Radius.circular(25),
+              ),
+            ),
+
+          )
         ],
       ),
     );
