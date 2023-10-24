@@ -167,6 +167,7 @@ class _State extends State<home> {
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => const place()));
           }, child:
+
           Text(
             'Read More',
             style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,color: Colors.green),
