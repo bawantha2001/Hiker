@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class place extends StatefulWidget {
@@ -31,37 +30,28 @@ class _placeState extends State<place> {
         .size;
 
     return Scaffold(
-      backgroundColor: const Color(0xFF5b7cff),
-      body: Center(
-        child: Stack(
-          children: [
-          Positioned(top: 0,
-              left: 50,
-              height: 280,
-              width: 280,
-              child: buildtop()),
-          Positioned(
-              bottom: 0,
-              height: 550,
-              child: buildbottom())
-        ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/sigiriya.jpg"),
+            fit: BoxFit.cover,
           ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 320,),
+            buildbottom(),
+          ],
+        )
+         /* add child content here */,
       ),
-    );
-  }
-
-  Widget buildtop() {
-    return Column(
-      children: <Widget>[
-        Image.asset('assets/images/5.png', // Replace with your image asset
-            fit: BoxFit.fill),
-      ],
     );
   }
 
   Widget buildbottom() {
     return SizedBox(
       width: mediasize.width,
+      height: 530,
       child:
       Opacity(
         opacity: 1,
@@ -71,28 +61,41 @@ class _placeState extends State<place> {
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
                 topRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
               )
           ),
           child: Padding(
-            padding: EdgeInsets.all(20.0),
+            padding: EdgeInsets.all(15.0),
             child: Column(
               children: [
                 Container(
-                  child: Image.asset('assets/images/sigiriya.jpg')
-                ),
+                  width: 330,
+                  margin: EdgeInsets.all(10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child:
+                      Image.asset('assets/images/sigiriya.jpg')
+                    ),
+                  ),
                 const SizedBox(height: 20),
-                const Text("TITLE",
+                const Text("SIGIRIYA",
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.w500
                   ),
                 ),
                 const SizedBox(height: 20),
-                const Text("Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla "
-                    "Bla BlaBla Bla Bla Bla Bla Bla Bla BlaBla BlaBla BlaBla Bla Bla Bla ",
-                  textAlign: TextAlign.justify,)
+                const Text("Sigiriya Lion Rock is an ancient rock fortress known for its massive "
+                    "column of rock that reaches nearly 200 meters high. The site dates back "
+                    "to the reign of King Kasyapa (477-495 AD), who chose this site as his new capital. "
+                    "He decorated the walls with frescoes, and built an impressive palace right on "
+                    "top of the rock column, accessible only through the mouth of an enormous carved lion.",
+                  textAlign: TextAlign.justify,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400
+                ),)
               ],
             )
           ),
