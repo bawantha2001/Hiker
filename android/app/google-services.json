@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "669801937866",
-    "project_id": "self-emp",
-    "storage_bucket": "self-emp.appspot.com"
+    "project_number": "1059901647305",
+    "project_id": "travelersguide-64748",
+    "storage_bucket": "travelersguide-64748.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:669801937866:android:6d315a7bb9b3d3b5432d33",
+        "mobilesdk_app_id": "1:1059901647305:android:0b057b869120cbb9486018",
         "android_client_info": {
           "package_name": "com.Bsoftwares.self_employer"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAbek30PIBq1FGR4U3OLeqRk8AkHiwo2ao"
+          "current_key": "AIzaSyAzN0Hp6I0FAVQtuliijEn098d2At8XsCc"
         }
       ],
       "services": {
