@@ -72,7 +72,7 @@ class Loading1 extends StatelessWidget {
         onPressed: (){
 
           Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => home()));
+              .push(MaterialPageRoute(builder: (context) => Login()));
         },
       ),
 
