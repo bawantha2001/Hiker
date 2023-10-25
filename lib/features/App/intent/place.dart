@@ -1,24 +1,102 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:self_employer/features/App/login/home.dart';
 
 class place extends StatefulWidget {
-  const place({super.key});
 
+  String placeName;
+  place({required this.placeName});
   @override
-  State<place> createState() => _placeState();
+  State<place> createState() => _placeState(placeName);
 }
 
 class _placeState extends State<place> {
 
+  String info="";
+  String accomadationName="";
+  String placeName;
+  String imagename="";
+  _placeState(this.placeName);
   late Size mediasize;
   late Color myColor;
-
   bool showForm = true;
+  final _db=FirebaseFirestore.instance;
+  late Future<List<String>> documentIds;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if(placeName=="Sigiriya"){
+      imagename="sigiriya.jpg";
+    }
+    else if(placeName=="Watadage"){
+      imagename="watadage.jpg";
+    }
+    else if(placeName=="Temple of the Tooth"){
+      imagename="templeof.jpg";
+    }
+    getNameFromFirestore();
+    getaccomNameFromFirestore();
+  }
 
   void toggle_form() {
     setState(() {
       showForm = !showForm;
     });
+
+
+  }
+
+  Future<void> getNameFromFirestore() async {
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection("places").doc(placeName);
+
+    try {
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data() as Map<String, dynamic>?;
+
+        if (data != null && data.containsKey("info")) {
+           setState(() {
+             info = data['info'] as String;
+           });
+        } else {
+          print("'info' key not found in the document");
+        }
+
+      } else {
+        print("Document does not exist");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
+  }
+
+  Future<void> getaccomNameFromFirestore() async {
+    final DocumentReference documentReference =
+    FirebaseFirestore.instance.collection("places").doc(placeName);
+
+    try {
+      DocumentSnapshot documentSnapshot = await documentReference.get();
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data() as Map<String, dynamic>?;
+
+        if (data != null && data.containsKey("accom")) {
+          setState(() {
+            accomadationName = data['accom'] as String;
+          });
+        } else {
+          print("'info' key not found in the document");
+        }
+
+      } else {
+        print("Document does not exist");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 
   @override
@@ -39,9 +117,9 @@ class _placeState extends State<place> {
       },
       child: Scaffold(
         body: Container(
-          decoration: const BoxDecoration(
+          decoration:  BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/sigiriya.jpg"),
+              image: AssetImage("assets/images/"+imagename),
               fit: BoxFit.cover,
             ),
           ),
@@ -85,22 +163,18 @@ class _placeState extends State<place> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child:
-                        Image.asset('assets/images/sigiriya.jpg')
+                        Image.asset("assets/images/"+imagename)
                       ),
                     ),
                   const SizedBox(height: 20),
-                  const Text("SIGIRIYA",
+                   Text(placeName,
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w500
                     )
                   ),
                   const SizedBox(height: 20),
-                  const Text("Sigiriya Lion Rock is an ancient rock fortress known for its massive "
-                      "column of rock that reaches nearly 200 meters high. The site dates back "
-                      "to the reign of King Kasyapa (477-495 AD), who chose this site as his new capital. "
-                      "He decorated the walls with frescoes, and built an impressive palace right on "
-                      "top of the rock column, accessible only through the mouth of an enormous carved lion.",
+                  Text(info,
                     textAlign: TextAlign.justify,
                   style: TextStyle(
                       fontSize: 15,
@@ -108,46 +182,19 @@ class _placeState extends State<place> {
                   ),
                   ),
                   const SizedBox(height: 20),
-                  const Text("Accomodation Places nearby Sigiriya", style: TextStyle(
+                  Text("Accomodation Places nearby "+placeName, style: TextStyle(
                       fontSize: 20,
-                      fontWeight: FontWeight.w500
+                      fontWeight: FontWeight.w500,
+                    color: Colors.green,
                   ),
                   ),
-                  const SizedBox(height: 20),
-                  const TextButton(onPressed: null,
-                      child: Text("Place 01", style: TextStyle(
+                   TextButton(onPressed: null,
+                      child: Text(accomadationName, style: TextStyle(
                           fontSize: 18,
-                          fontWeight: FontWeight.w500
+                          fontWeight: FontWeight.w500,
+                        color: Colors.black,
                       ),
                       ),
-                  ),
-                  const TextButton(onPressed: null,
-                    child: Text("Place 02", style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                    ),
-                    ),
-                  ),
-                  const TextButton(onPressed: null,
-                    child: Text("Place 03", style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                    ),
-                    ),
-                  ),
-                  const TextButton(onPressed: null,
-                    child: Text("Place 04", style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                    ),
-                    ),
-                  ),
-                  const TextButton(onPressed: null,
-                    child: Text("Place 05", style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500
-                    ),
-                    ),
                   ),
                 ],
               ),
@@ -166,6 +213,18 @@ class _placeState extends State<place> {
     );
   }
 
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 
-  
+
+
 }

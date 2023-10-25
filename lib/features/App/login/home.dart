@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,147 +20,155 @@ class _State extends State<home> {
   @override
   Widget build(BuildContext context) {
     mediasize = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0),
-            child: Center(
-                child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      "Traveler",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 38.0,
-                        fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async{
+        _showAlertDialog(context);
+        return true;
+      },
+      child: Scaffold(
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0),
+              child: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.map,color: Color(0xFF5b7cff),size: 40,),
+                          Text(
+                            "Traveler",
+                            style: TextStyle(
+                              color: Color(0xFF5b7cff),
+                              fontSize: 38.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                ),
-                TextField(
-                  style: TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.bold),
-                  decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      hintText: "Ex:Sigiriya ",
-                      prefixIcon: Icon(Icons.search),
-                      prefixIconColor: Colors.black),
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(20.0),
-                  child: Center(
-                    child: Text("Most Visited Palces",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 22.0,
-                          color: Colors.green,
-                        )),
+                  TextField(
+                    style: TextStyle(
+                        color: Colors.black, fontWeight: FontWeight.bold),
+                    decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        hintText: "Ex:Sigiriya ",
+                        prefixIcon: Icon(Icons.search),
+                        prefixIconColor: Colors.black),
                   ),
-                ),
-                const SizedBox(
-                  height: 10.0,
-                ),
-              ],
-            )),
-          ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-            child: Container(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  buildCard("Sigiriya", "Polonnaruwa,Sri Lanka",
-                      'assets/images/sigiriya.jpg'),
+                  const Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Center(
+                      child: Text("Most Visited Palces",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22.0,
+                            color: Colors.green,
+                          )),
+                    ),
+                  ),
                   const SizedBox(
-                    width: 12,
+                    height: 10.0,
                   ),
-                  buildCard("Watadage", "Polonnaruwa,Sri Lanka",
-                      'assets/images/watadage.jpg'),
-                  const SizedBox(
-                    width: 12,
-                  ),
-                  buildCard("Temple of the Tooth", "Kandy,Sri Lanka",
-                      'assets/images/templeof.jpg'),
                 ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Container(
-              child: const SizedBox(
-                  child: Text(
-                "Place Nearby",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22.0,
-                  color: Colors.green,
-                ),
               )),
             ),
-          ),
-          Container(
-            width: mediasize.width,
-            height: mediasize.height - 532,
-            decoration: const BoxDecoration(
-              color: Colors.cyan,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25),
-                topRight: Radius.circular(25),
+            Padding(
+              padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+              child: Container(
+                height: 250,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  children: [
+                    buildCard("Sigiriya", "Polonnaruwa,Sri Lanka",
+                        'assets/images/sigiriya.jpg'),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    buildCard("Watadage", "Polonnaruwa,Sri Lanka",
+                        'assets/images/watadage.jpg'),
+                    const SizedBox(
+                      width: 12,
+                    ),
+                    buildCard("Temple of the Tooth", "Kandy,Sri Lanka",
+                        'assets/images/templeof.jpg'),
+                  ],
+                ),
               ),
             ),
-            child: GoogleMap(
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(7.8731, 80.7718),
-                zoom: 8,
-              ),
-              markers: {
-                const Marker(
-                  markerId: MarkerId("Temple Of the Tooth"),
-                  position: LatLng(7.293627, 80.641350),
-                  icon: BitmapDescriptor.defaultMarker,
-                  infoWindow: InfoWindow(
-                      title: 'Temple Of the Tooth',
-                      snippet: 'Kandy'),
-                ),
-                const Marker(
-                  markerId: MarkerId("Sigiriya"),
-                  position: LatLng(7.956944, 80.759720),
-                  icon: BitmapDescriptor.defaultMarker,
-                  infoWindow: InfoWindow(
-                      title: 'Sigiriya', snippet: 'Polonnaruwa'),
-                ),
-                const Marker(
-                  markerId: MarkerId("Watadageya"),
-                  position: LatLng(8.1561, 80.9962),
-                  icon: BitmapDescriptor.defaultMarker,
-                  infoWindow: InfoWindow(
-                    title: 'Watadageya',
-                    snippet: 'Polonnaruwa',
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                child: const SizedBox(
+                    child: Text(
+                  "Place Nearby",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22.0,
+                    color: Colors.green,
                   ),
-                )
-              },
+                )),
+              ),
             ),
-          )
-        ],
+            Container(
+              width: mediasize.width,
+              height: mediasize.height - 532,
+              decoration: const BoxDecoration(
+                color: Colors.cyan,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(25),
+                  topRight: Radius.circular(25),
+                ),
+              ),
+              child: GoogleMap(
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(7.8731, 80.7718),
+                  zoom: 8,
+                ),
+                markers: {
+                  const Marker(
+                    markerId: MarkerId("Temple Of the Tooth"),
+                    position: LatLng(7.293627, 80.641350),
+                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(
+                        title: 'Temple Of the Tooth',
+                        snippet: 'Kandy'),
+                  ),
+                  const Marker(
+                    markerId: MarkerId("Sigiriya"),
+                    position: LatLng(7.956944, 80.759720),
+                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(
+                        title: 'Sigiriya', snippet: 'Polonnaruwa'),
+                  ),
+                  const Marker(
+                    markerId: MarkerId("Watadageya"),
+                    position: LatLng(8.1561, 80.9962),
+                    icon: BitmapDescriptor.defaultMarker,
+                    infoWindow: InfoWindow(
+                      title: 'Watadageya',
+                      snippet: 'Polonnaruwa',
+                    ),
+                  )
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
-
-    void signOut() async {
-      await FirebaseAuth.instance.signOut().then((value) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const Login())));
-    }
   }
 
   Widget buildCard(String placeName, String locationName, String imageName) =>
@@ -206,10 +214,9 @@ class _State extends State<home> {
               ),
               TextButton(
                 onPressed: () {
-                  showToast(placeName);
                   Navigator.pop(context);
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const place()));
+                      MaterialPageRoute(builder: (context) =>place(placeName: placeName)));
                 },
                 child: const Text(
                   'Read More',
@@ -235,4 +242,33 @@ class _State extends State<home> {
       fontSize: 16.0,
     );
   }
+
+  void _showAlertDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Log out'),
+          content: Text('Do you want to log out'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                signOut();
+                Navigator.pop(context);
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => const Login()));// Close the dialog
+              },
+              child: Text('Yes'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void signOut() async {
+    await FirebaseAuth.instance.signOut().then((value) => Navigator.push(
+        context, MaterialPageRoute(builder: (context) => const Login())));
+  }
+
 }
