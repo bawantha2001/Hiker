@@ -28,7 +28,7 @@ class _Login extends State<Login> {
       if (user != null) {
         Navigator.pop(context);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const home()));
+            context, MaterialPageRoute(builder: (context) =>home()));
       }
     });
 
@@ -218,8 +218,8 @@ class _Login extends State<Login> {
     },
       style: ElevatedButton.styleFrom(
         elevation: 5,
-        backgroundColor: Color(0xFF5b7cff),
-        shadowColor: Color(0xFF5b7cff),
+        backgroundColor: const Color(0xFF5b7cff),
+        shadowColor: const Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
       ),
       child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
@@ -340,7 +340,7 @@ class _Login extends State<Login> {
       showToast("Account Created Successfully");
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const home()));
+          context, MaterialPageRoute(builder: (context) =>  home()));
       toggle_form();
       clear();
     }
@@ -440,7 +440,7 @@ class _Login extends State<Login> {
           .signInWithCredential(credential);
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const home()));
+          context, MaterialPageRoute(builder: (context) => home()));
     } catch (e) {
       print(e.toString() + " error");
     }
@@ -455,7 +455,7 @@ class _Login extends State<Login> {
 
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => const home()));
+          context, MaterialPageRoute(builder: (context) =>  home()));
       toggle_form();
       clear();
     }
