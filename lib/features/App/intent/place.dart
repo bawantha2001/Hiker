@@ -6,18 +6,20 @@ import 'package:self_employer/features/App/login/home.dart';
 class place extends StatefulWidget {
 
   String placeName;
-  place({required this.placeName});
+  String image;
+  String info;
+  place({required this.placeName,required this.image,required this.info});
   @override
-  State<place> createState() => _placeState(placeName);
+  State<place> createState() => _placeState(placeName,image,info);
 }
 
 class _placeState extends State<place> {
 
-  String info="";
-  String accomadationName="";
   String placeName;
-  String imagename="";
-  _placeState(this.placeName);
+  String image;
+  String info;
+  _placeState(this.placeName, this.image,this.info);
+
   late Size mediasize;
   late Color myColor;
   bool showForm = true;
@@ -28,75 +30,12 @@ class _placeState extends State<place> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(placeName=="Sigiriya"){
-      imagename="sigiriya.jpg";
-    }
-    else if(placeName=="Watadage"){
-      imagename="watadage.jpg";
-    }
-    else if(placeName=="Temple of the Tooth"){
-      imagename="templeof.jpg";
-    }
-    getNameFromFirestore();
-    getaccomNameFromFirestore();
   }
 
   void toggle_form() {
     setState(() {
       showForm = !showForm;
     });
-
-
-  }
-
-  Future<void> getNameFromFirestore() async {
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection("places").doc(placeName);
-
-    try {
-      DocumentSnapshot documentSnapshot = await documentReference.get();
-      if (documentSnapshot.exists) {
-        final data = documentSnapshot.data() as Map<String, dynamic>?;
-
-        if (data != null && data.containsKey("info")) {
-           setState(() {
-             info = data['info'] as String;
-           });
-        } else {
-          print("'info' key not found in the document");
-        }
-
-      } else {
-        print("Document does not exist");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  Future<void> getaccomNameFromFirestore() async {
-    final DocumentReference documentReference =
-    FirebaseFirestore.instance.collection("places").doc(placeName);
-
-    try {
-      DocumentSnapshot documentSnapshot = await documentReference.get();
-      if (documentSnapshot.exists) {
-        final data = documentSnapshot.data() as Map<String, dynamic>?;
-
-        if (data != null && data.containsKey("accom")) {
-          setState(() {
-            accomadationName = data['accom'] as String;
-          });
-        } else {
-          print("'info' key not found in the document");
-        }
-
-      } else {
-        print("Document does not exist");
-      }
-    } catch (e) {
-      print("Error: $e");
-    }
   }
 
   @override
@@ -119,7 +58,7 @@ class _placeState extends State<place> {
         body: Container(
           decoration:  BoxDecoration(
             image: DecorationImage(
-              image: AssetImage("assets/images/"+imagename),
+              image: NetworkImage(image),
               fit: BoxFit.cover,
             ),
           ),
@@ -163,7 +102,7 @@ class _placeState extends State<place> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child:
-                        Image.asset("assets/images/"+imagename)
+                        Image.network(image),
                       ),
                     ),
                   const SizedBox(height: 20),
@@ -182,14 +121,14 @@ class _placeState extends State<place> {
                   ),
                   ),
                   const SizedBox(height: 20),
-                  Text("Accomodation Places nearby "+placeName, style: TextStyle(
+                  Text("Accomodation Places Nearby "+placeName, style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
                     color: Colors.green,
                   ),
                   ),
                    TextButton(onPressed: null,
-                      child: Text(accomadationName, style: TextStyle(
+                      child: Text("accomadationName", style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         color: Colors.black,

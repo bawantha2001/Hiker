@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,8 +15,61 @@ class home extends StatefulWidget {
 }
 
 class _State extends State<home> {
+
   late Size mediasize;
   bool issignout = false;
+  List<String> placeIds=[];
+  List<String> placeName=[];
+  List<String> location=[];
+  List<String> placeImage=[];
+  List<String> info=[];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      getDocumentIDs();
+    });
+  }
+
+  Future<void> getDocumentIDs() async {
+    CollectionReference collection = FirebaseFirestore.instance.collection('places');
+    QuerySnapshot querySnapshot = await collection.get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot document in querySnapshot.docs) {
+          placeIds.add(document.id);
+          getDataFromFirestore(document.id);
+      }
+    } else {
+      print('No documents found in the collection.');
+    }
+  }
+
+  Future<void> getDataFromFirestore(String userId) async{
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    CollectionReference users = firestore.collection('places');
+    DocumentReference userDoc = users.doc(userId); // Replace 'user_id' with the actual document ID
+
+    userDoc.get().then((DocumentSnapshot documentSnapshot) {
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+        placeName.add(data['name']); // Replace 'value1' with the actual field name
+        location.add(data['location']);
+        placeImage.add(data['image']);
+        info.add(data['info']);// Replace 'value2' with the actual field name
+
+      } else {
+        // The document doesn't exist
+        print('Document does not exist in Firestore.');
+      }
+    }).catchError((error) {
+      print('Error getting document: $error');
+    });
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -89,23 +143,12 @@ class _State extends State<home> {
               padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
               child: Container(
                 height: 250,
-                child: ListView(
+                child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  children: [
-                    buildCard("Sigiriya", "Polonnaruwa,Sri Lanka",
-                        'assets/images/sigiriya.jpg'),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    buildCard("Watadage", "Polonnaruwa,Sri Lanka",
-                        'assets/images/watadage.jpg'),
-                    const SizedBox(
-                      width: 12,
-                    ),
-                    buildCard("Temple of the Tooth", "Kandy,Sri Lanka",
-                        'assets/images/templeof.jpg'),
-                  ],
-                ),
+                  itemCount: placeIds.length,
+                    itemBuilder: (context,index){
+                    return build_card(placeName[index], location[index], placeImage[index],info[index]);
+                    }),
               ),
             ),
             Padding(
@@ -124,7 +167,7 @@ class _State extends State<home> {
             ),
             Container(
               width: mediasize.width,
-              height: mediasize.height - 532,
+              height: mediasize.height-532,
               decoration: const BoxDecoration(
                 color: Colors.cyan,
                 borderRadius: BorderRadius.only(
@@ -171,77 +214,8 @@ class _State extends State<home> {
     );
   }
 
-  Widget buildCard(String placeName, String locationName, String imageName) =>
-      Container(
-        width: 180,
-        decoration: BoxDecoration(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black)),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        imageName,
-                        fit: BoxFit.fill,
-                        height: 130,
-                        width: 180,
-                      ))),
-              SizedBox(
-                height: 4,
-              ),
-              Text(
-                placeName,
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 4,
-              ),
-              Row(
-                children: [
-                  Icon(Icons.location_on),
-                  Text(
-                    locationName,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>place(placeName: placeName)));
-                },
-                child: const Text(
-                  'Read More',
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
 
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  }
+
 
   void _showAlertDialog(BuildContext context) {
     showDialog(
@@ -271,4 +245,87 @@ class _State extends State<home> {
         context, MaterialPageRoute(builder: (context) => const Login())));
   }
 
+}
+
+class build_card extends StatelessWidget{
+  final String placeName;
+  final String locationName;
+  final String imageName;
+  final String info;
+
+  build_card(this.placeName,this.locationName,this.imageName,this.info);
+
+  Widget build(BuildContext context){
+    return Container(
+          width: 180,
+          margin: EdgeInsets.fromLTRB(5,0,5,0),
+          decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.black)),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(
+                          imageName,
+                          fit: BoxFit.fill,
+                          height: 130,
+                          width: 180,
+                        ))),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  placeName,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Row(
+                  children: [
+                    Icon(Icons.location_on),
+                    Text(
+                      locationName,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info)));
+                  },
+                  child: const Text(
+                    'Read More',
+                    style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
+                  ),
+                ),
+              ],
+            ),
+          ),
+    );
+  }
+
+  void showToast(String message) {
+    Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
 }
