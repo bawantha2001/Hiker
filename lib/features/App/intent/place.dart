@@ -34,7 +34,7 @@ class _placeState extends State<place> {
       onWillPop: () async{
         Navigator.pop(context);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const home()));
+            context, MaterialPageRoute(builder: (context) => home()));
         return true;
       },
       child: Scaffold(
