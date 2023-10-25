@@ -108,7 +108,7 @@ class _placeState extends State<place> {
                   ),
                   ),
                   const SizedBox(height: 20),
-                  const Text("Reservation Places", style: TextStyle(
+                  const Text("Accomodation Places nearby Sigiriya", style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500
                   ),

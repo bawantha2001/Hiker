@@ -132,14 +132,14 @@ class _State extends State<home> {
                   icon: BitmapDescriptor.defaultMarker,
                   infoWindow: InfoWindow(
                       title: 'Temple Of the Tooth',
-                      snippet: 'Central Province'),
+                      snippet: 'Kandy'),
                 ),
                 const Marker(
                   markerId: MarkerId("Sigiriya"),
                   position: LatLng(7.956944, 80.759720),
                   icon: BitmapDescriptor.defaultMarker,
                   infoWindow: InfoWindow(
-                      title: 'Sigiriya', snippet: 'Central Province'),
+                      title: 'Sigiriya', snippet: 'Polonnaruwa'),
                 ),
                 const Marker(
                   markerId: MarkerId("Watadageya"),
@@ -147,7 +147,7 @@ class _State extends State<home> {
                   icon: BitmapDescriptor.defaultMarker,
                   infoWindow: InfoWindow(
                     title: 'Watadageya',
-                    snippet: 'North Central',
+                    snippet: 'Polonnaruwa',
                   ),
                 )
               },
