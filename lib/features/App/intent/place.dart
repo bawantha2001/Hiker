@@ -8,9 +8,10 @@ class place extends StatefulWidget {
   String placeName;
   String image;
   String info;
-  place({required this.placeName,required this.image,required this.info});
+  String accom;
+  place({required this.placeName,required this.image,required this.info,required this.accom});
   @override
-  State<place> createState() => _placeState(placeName,image,info);
+  State<place> createState() => _placeState(placeName,image,info,accom);
 }
 
 class _placeState extends State<place> {
@@ -18,7 +19,8 @@ class _placeState extends State<place> {
   String placeName;
   String image;
   String info;
-  _placeState(this.placeName, this.image,this.info);
+  String accom;
+  _placeState(this.placeName, this.image,this.info,this.accom);
 
   late Size mediasize;
   late Color myColor;
@@ -128,7 +130,7 @@ class _placeState extends State<place> {
                   ),
                   ),
                    TextButton(onPressed: null,
-                      child: Text("accomadationName", style: TextStyle(
+                      child: Text(accom, style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w500,
                         color: Colors.black,

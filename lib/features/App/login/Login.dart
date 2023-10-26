@@ -59,16 +59,22 @@ class _Login extends State<Login> {
         .of(context)
         .size;
 
-    return Scaffold(
-      backgroundColor: const Color(0xFF5b7cff),
-      body: Stack(children: [
-        Positioned(top: 0,
-            left: 50,
-            height: 280,
-            width: 280,
-            child: buildtop()),
-        buildAnimatedsingup(),
-      ],),
+    return WillPopScope(
+      onWillPop: ()async{
+        Navigator.pop(context);
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: const Color(0xFF5b7cff),
+        body: Stack(children: [
+          Positioned(top: 0,
+              left: 50,
+              height: 280,
+              width: 280,
+              child: buildtop()),
+          buildAnimatedsingup(),
+        ],),
+      ),
     );
   }
 

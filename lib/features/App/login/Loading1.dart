@@ -71,6 +71,7 @@ class Loading1 extends StatelessWidget {
         ),
         onPressed: (){
 
+          Navigator.pop(context);
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => Login()));
         },

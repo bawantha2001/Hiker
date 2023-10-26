@@ -23,16 +23,17 @@ class _State extends State<home> {
   List<String> placeName=[];
   List<String> location=[];
   List<String> placeImage=[];
+  List<String> accomodation=[];
   List<String> info=[];
 
   @override
   void initState() {
+    getDocumentIDs();
+    super.initState(); // Call super.initState() first
+    // Call your function directly
     // TODO: implement initState
-    super.initState();
-    setState(() {
-      getDocumentIDs();
-    });
   }
+
 
   Future<void> getDocumentIDs() async {
     CollectionReference collection = FirebaseFirestore.instance.collection('places');
@@ -44,7 +45,7 @@ class _State extends State<home> {
           getDataFromFirestore(document.id);
       }
     } else {
-      print('No documents found in the collection.');
+      showToast('No documents found in the collection.');
     }
   }
 
@@ -56,10 +57,14 @@ class _State extends State<home> {
     userDoc.get().then((DocumentSnapshot documentSnapshot) {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-        placeName.add(data['name']); // Replace 'value1' with the actual field name
-        location.add(data['location']);
-        placeImage.add(data['image']);
-        info.add(data['info']);// Replace 'value2' with the actual field name
+        setState(() {
+          placeName.add(data['name']); // Replace 'value1' with the actual field name
+          location.add(data['location']);
+          placeImage.add(data['image']);
+          accomodation.add(data['accom']);
+          info.add(data['info']);// Replace 'value2' with the actual field name
+        });
+
 
       } else {
         // The document doesn't exist
@@ -148,7 +153,13 @@ class _State extends State<home> {
                   scrollDirection: Axis.horizontal,
                   itemCount: placeIds.length,
                     itemBuilder: (context,index){
-                    return build_card(placeName[index], location[index], placeImage[index],info[index]);
+                    return StreamBuilder<Object>(
+                      stream: null,
+                      builder: (context, snapshot) {
+                        return
+                          build_card(placeName[index], location[index], placeImage[index],info[index],accomodation[index]);
+                      }
+                    );
                     }),
               ),
             ),
@@ -229,9 +240,7 @@ class _State extends State<home> {
             TextButton(
               onPressed: () {
                 signOut();
-                Navigator.pop(context);
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => const Login()));// Close the dialog
+                Navigator.pop(context);// Close the dialog
               },
               child: Text('Yes'),
             ),
@@ -243,7 +252,8 @@ class _State extends State<home> {
 
   void signOut() async {
     await FirebaseAuth.instance.signOut().then((value) => Navigator.push(
-        context, MaterialPageRoute(builder: (context) => const Login())));
+        context, MaterialPageRoute(builder: (context) => Login())));
+    Navigator.pop(context);
   }
 
 }
@@ -253,11 +263,13 @@ class build_card extends StatelessWidget{
   final String locationName;
   final String imageName;
   final String info;
+  final String accom;
 
-  build_card(this.placeName,this.locationName,this.imageName,this.info);
+  build_card(this.placeName,this.locationName,this.imageName,this.info,this.accom);
 
   Widget build(BuildContext context){
-    return Container(
+    return
+      Container(
           width: 180,
           margin: EdgeInsets.fromLTRB(5,0,5,0),
           decoration: BoxDecoration(
@@ -302,7 +314,7 @@ class build_card extends StatelessWidget{
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info)));
+                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,accom: accom,)));
                   },
                   child: const Text(
                     'Read More',
@@ -317,16 +329,15 @@ class build_card extends StatelessWidget{
           ),
     );
   }
-
-  void showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  }
+}
+void showToast(String message) {
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: Colors.black,
+    textColor: Colors.white,
+    fontSize: 16.0,
+  );
 }

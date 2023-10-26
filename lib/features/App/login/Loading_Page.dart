@@ -70,6 +70,7 @@ class Loading extends StatelessWidget {
         ),
         ),
         onPressed: (){
+          Navigator.pop(context);
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (context) => Loading1()));
         },
