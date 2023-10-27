@@ -20,6 +20,7 @@ class _State extends State<home> {
   late Size mediasize;
   bool issignout = false;
   List<String> placeIds=[];
+  List<String> retrievedplaceIds=[];
   List<String> placeName=[];
   List<String> location=[];
   List<String> placeImage=[];
@@ -58,6 +59,7 @@ class _State extends State<home> {
       if (documentSnapshot.exists) {
         Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
         setState(() {
+          retrievedplaceIds.add(data['placeId']);
           placeName.add(data['name']); // Replace 'value1' with the actual field name
           location.add(data['location']);
           placeImage.add(data['image']);
@@ -157,7 +159,7 @@ class _State extends State<home> {
                       stream: null,
                       builder: (context, snapshot) {
                         return
-                          build_card(placeName[index], location[index], placeImage[index],info[index],accomodation[index]);
+                          build_card(placeName[index], location[index], placeImage[index],info[index],accomodation[index],retrievedplaceIds[index]);
                       }
                     );
                     }),
@@ -264,8 +266,9 @@ class build_card extends StatelessWidget{
   final String imageName;
   final String info;
   final String accom;
+  final String placeId;
 
-  build_card(this.placeName,this.locationName,this.imageName,this.info,this.accom);
+  build_card(this.placeName,this.locationName,this.imageName,this.info,this.accom,this.placeId);
 
   Widget build(BuildContext context){
     return
@@ -314,7 +317,7 @@ class build_card extends StatelessWidget{
                   onPressed: () {
                     Navigator.pop(context);
                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,accom: accom,)));
+                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,accom: accom,placeId: placeId,)));
                   },
                   child: const Text(
                     'Read More',

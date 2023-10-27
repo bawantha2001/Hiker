@@ -2,16 +2,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:self_employer/features/App/login/home.dart';
+import 'package:self_employer/features/App/login/bookings.dart';
+import 'package:self_employer/features/App/login/guide.dart';
 
 class place extends StatefulWidget {
 
+  String placeId;
   String placeName;
   String image;
   String info;
   String accom;
-  place({required this.placeName,required this.image,required this.info,required this.accom});
+  place({required this.placeName,required this.image,required this.info,required this.accom,required this.placeId});
   @override
-  State<place> createState() => _placeState(placeName,image,info,accom);
+  State<place> createState() => _placeState(placeName,image,info,accom,placeId);
 }
 
 class _placeState extends State<place> {
@@ -20,7 +23,8 @@ class _placeState extends State<place> {
   String image;
   String info;
   String accom;
-  _placeState(this.placeName, this.image,this.info,this.accom);
+  String placeId;
+  _placeState(this.placeName, this.image,this.info,this.accom,this.placeId);
 
   late Size mediasize;
   late Color myColor;
@@ -123,21 +127,25 @@ class _placeState extends State<place> {
                   ),
                   ),
                   const SizedBox(height: 20),
-                  Text("Accomodation Places Nearby "+placeName, style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                    color: Colors.green,
-                  ),
-                  ),
-                   TextButton(onPressed: null,
-                      child: Text(accom, style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        color: Colors.black,
+                  ElevatedButton(onPressed: (){
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
+                  },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        elevation: 5
                       ),
+                      child: Text('Book a Hotel')),
+                  ElevatedButton(onPressed: (){
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
+                  },
+                      style: ElevatedButton.styleFrom(
+                          elevation: 5
                       ),
-                  ),
+                      child: Text('Hire a guide')),
                 ],
+
               ),
             )
           ),

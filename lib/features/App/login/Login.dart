@@ -35,6 +35,7 @@ class _Login extends State<Login> {
   }
 
   bool isLoading = false;
+  bool isPassword = true;
   late Color myColor;
   late Size mediasize;
   TextEditingController emailController = TextEditingController();
@@ -153,9 +154,12 @@ class _Login extends State<Login> {
         ),
         const SizedBox(height: 30,),
         buildGreyText("Email address"),
+        const SizedBox(height: 5),
         buildInputField(emailController),
+        const SizedBox(height: 30),
         buildGreyText("Password"),
-        buildInputField(passwordController, isPassword: true),
+        const SizedBox(height: 5),
+        buildpasswordInputField(passwordController),
         buildRemember(),
         const SizedBox(height: 10),
         buildLoginButton(),
@@ -196,6 +200,39 @@ class _Login extends State<Login> {
           ),
         ),
         obscureText: isPassword,
+      ),
+    );
+  }
+
+  Widget buildpasswordInputField(TextEditingController controller) {
+    return SizedBox(
+      height: 50,
+      child: TextField(
+        obscureText: isPassword,
+        controller: controller,
+        style: TextField.materialMisspelledTextStyle,
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20.0),
+              borderSide: const BorderSide(
+                color: Colors.black,
+              )
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(isPassword?Icons.visibility:Icons.visibility_off), 
+            onPressed: () {
+              setState(() {
+                isPassword=!isPassword;
+              });
+
+          },
+          )
+        ),
       ),
     );
   }
@@ -309,9 +346,9 @@ class _Login extends State<Login> {
         buildGreyText("Email address"),
         buildInputField(emailController),
         buildGreyText("Password"),
-        buildInputField(passwordController, isPassword: true),
+        buildpasswordInputField(passwordController),
         buildGreyText("Confirm Password"),
-        buildInputField(confirmpasswordController, isPassword: true),
+        buildpasswordInputField(confirmpasswordController),
         const SizedBox(height: 30),
         buildsignupButton(),
         const SizedBox(height: 20),
@@ -474,3 +511,4 @@ class _Login extends State<Login> {
     }
   }
 }
+
