@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:self_employer/features/App/login/Loading1.dart';
 import 'package:self_employer/features/App/login/Login.dart';
 import 'package:self_employer/features/App/login/home.dart';
 
@@ -16,64 +14,53 @@ class Loading extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/b2.jpg"),
+            image: AssetImage("assets/images/b1.jpg"),
             fit: BoxFit.cover,
           ),
         ),
+
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
               width: mediasize.width,
-              child: const Center(
+              child: Center(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     SizedBox(
-                      height: 350,
+                      width: 100,
+                      height: 100,
+                      child: Image.asset("assets/images/10.png"),
                     ),
-                    Text(
-                      "Let’s Find a  \n Place to Visit",
+
+                    const Text("Traveler.",
                       style: TextStyle(
-                          fontSize: 50,
+                          fontSize: 60,
                           color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.w900),
+                      textAlign: TextAlign.center,),
+
+                    const Text(
+                      "Let’s Find a Place to Visit.",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
-                      height: 20,
+                    SizedBox(height: 30,),
+                    const CircularProgressIndicator(
+                      color: Colors.white,
                     ),
-                    Text(
-                      "Let’s start here!",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                      textAlign: TextAlign.center,
-                    )
+
+
                   ],
                 ),
               ),
             )
           ],
         ) /* add child content here */,
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        // elevation: 20.0,
-        backgroundColor: Colors.transparent,
-        // child: const Icon(Icons.arrow_forward),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: Colors.white,width: 2),
-        ),
-        label: const Text("Next",style: TextStyle(
-          fontWeight: FontWeight.bold,
-         fontSize: 15,
-        color: Colors.white,
-        ),
-        ),
-        onPressed: (){
-          Navigator.pop(context);
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => Loading1()));
-        },
       ),
     );
   }

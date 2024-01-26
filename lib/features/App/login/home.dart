@@ -17,219 +17,217 @@ class home extends StatefulWidget {
 
 class _State extends State<home> {
 
-  late Size mediasize;
+  late Size mediasize=MediaQuery.of(context).size;
   bool issignout = false;
-  List<String> placeIds=[];
-  List<String> retrievedplaceIds=[];
-  List<String> placeName=[];
-  List<String> location=[];
-  List<String> placeImage=[];
-  List<String> accomodation=[];
-  List<String> info=[];
 
   @override
   void initState() {
-    getDocumentIDs();
     super.initState(); // Call super.initState() first
     // Call your function directly
     // TODO: implement initState
   }
 
 
-  Future<void> getDocumentIDs() async {
-    CollectionReference collection = FirebaseFirestore.instance.collection('places');
-    QuerySnapshot querySnapshot = await collection.get();
-
-    if (querySnapshot.docs.isNotEmpty) {
-      for (QueryDocumentSnapshot document in querySnapshot.docs) {
-          placeIds.add(document.id);
-          getDataFromFirestore(document.id);
-      }
-    } else {
-      showToast('No documents found in the collection.');
-    }
-  }
-
-  Future<void> getDataFromFirestore(String userId) async{
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
-    CollectionReference users = firestore.collection('places');
-    DocumentReference userDoc = users.doc(userId); // Replace 'user_id' with the actual document ID
-
-    userDoc.get().then((DocumentSnapshot documentSnapshot) {
-      if (documentSnapshot.exists) {
-        Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
-        setState(() {
-          retrievedplaceIds.add(data['placeId']);
-          placeName.add(data['name']); // Replace 'value1' with the actual field name
-          location.add(data['location']);
-          placeImage.add(data['image']);
-          accomodation.add(data['accom']);
-          info.add(data['info']);// Replace 'value2' with the actual field name
-        });
-
-
-      } else {
-        // The document doesn't exist
-        print('Document does not exist in Firestore.');
-      }
-    }).catchError((error) {
-      print('Error getting document: $error');
-    });
-  }
-
-
-
   @override
   Widget build(BuildContext context) {
-    mediasize = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async{
         _showAlertDialog(context);
         return true;
       },
       child: Scaffold(
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20.0, 40.0, 20.0, 0),
-              child: Center(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Icon(Icons.map,color: Color(0xFF5b7cff),size: 40,),
-                          Text(
-                            "Traveler",
-                            style: TextStyle(
-                              color: Color(0xFF5b7cff),
-                              fontSize: 38.0,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  TextField(
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        hintText: "Ex:Sigiriya ",
-                        prefixIcon: Icon(Icons.search),
-                        prefixIconColor: Colors.black),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Center(
-                      child: Text("Most Visited Palces",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 22.0,
-                            color: Colors.green,
-                          )),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10.0,
-                  ),
-                ],
-              )),
+        body: Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage("assets/images/p.jpg"),
+              fit: BoxFit.cover,
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-              child: Container(
-                height: 250,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: placeIds.length,
-                    itemBuilder: (context,index){
-                    return StreamBuilder<Object>(
-                      stream: null,
-                      builder: (context, snapshot) {
-                        return
-                          build_card(placeName[index], location[index], placeImage[index],info[index],accomodation[index],retrievedplaceIds[index]);
-                      }
-                    );
-                    }),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                child: const SizedBox(
-                    child: Text(
-                  "Place Nearby",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22.0,
-                    color: Colors.green,
-                  ),
-                )),
-              ),
-            ),
-            Container(
-              width: mediasize.width,
-              height: mediasize.height-532,
-              decoration: const BoxDecoration(
-                color: Colors.cyan,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(25),
-                  topRight: Radius.circular(25),
-                ),
-              ),
-              child: GoogleMap(
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(7.8731, 80.7718),
-                  zoom: 8,
-                ),
-                markers: {
-                  const Marker(
-                    markerId: MarkerId("Temple Of the Tooth"),
-                    position: LatLng(7.293627, 80.641350),
-                    icon: BitmapDescriptor.defaultMarker,
-                    infoWindow: InfoWindow(
-                        title: 'Temple Of the Tooth',
-                        snippet: 'Kandy'),
-                  ),
-                  const Marker(
-                    markerId: MarkerId("Sigiriya"),
-                    position: LatLng(7.956944, 80.759720),
-                    icon: BitmapDescriptor.defaultMarker,
-                    infoWindow: InfoWindow(
-                        title: 'Sigiriya', snippet: 'Polonnaruwa'),
-                  ),
-                  const Marker(
-                    markerId: MarkerId("Watadageya"),
-                    position: LatLng(8.1561, 80.9962),
-                    icon: BitmapDescriptor.defaultMarker,
-                    infoWindow: InfoWindow(
-                      title: 'Watadageya',
-                      snippet: 'Polonnaruwa',
-                    ),
-                  )
-                },
-              ),
-            )
-          ],
+          ),
+          child: SafeArea(
+            child: build_body(context),
+          ),
         ),
       ),
     );
   }
 
 
+  Widget build_body(BuildContext context){
+      return
+        Padding(
+          padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0,),
+          child: SingleChildScrollView(
+          child: Column(
+          children: [
+          Center(
+          child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+          const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Center(
+          child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+          Icon(Icons.map,color: Color(0xFF5b7cff),size: 40,),
+          Text(
+          "Traveler",
+          style: TextStyle(
+          color: Color(0xFF5b7cff),
+          fontSize: 38.0,
+          fontWeight: FontWeight.bold,
+          ),
+          ),
+          ],
+          ),
+          ),
+          ),
 
+          Opacity(
+            opacity: 0.7,
+            child: TextField(
+            style: TextStyle(
+            color: Colors.black, fontWeight: FontWeight.bold),
+            decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.0),
+            ),
+            hintText: "Ex:Sigiriya ",
+            prefixIcon: Icon(Icons.search),
+            prefixIconColor: Colors.black),
+            ),
+          ),
+
+          const Padding(
+          padding: EdgeInsets.fromLTRB(0,20,0,0),
+          child: Center(
+          child: Text("Places To Visit In Sri Lanka.",
+          style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25.0,
+          color: Colors.green,
+          )),
+          ),
+          ),
+          ],
+          )),
+
+          LayoutBuilder(
+          builder: (Context,constraints) {
+          return Wrap(
+          children: [
+          Container(
+          height: 260,
+            child: handleCard(context),
+          ),
+          ],
+          );
+          }
+          ),
+
+          Container(
+          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+          child: Text(
+          "Locations.",
+          style: TextStyle(
+          fontWeight: FontWeight.bold,
+          fontSize: 25.0,
+          color: Colors.green,
+          ),
+          ),
+          ),
+
+          Container(
+          height: mediasize.height,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16.0),
+            child: GoogleMap(
+            initialCameraPosition: const CameraPosition(
+            target: LatLng(7.8731, 80.7718),
+            zoom: 9,
+            ),
+            markers: {
+            const Marker(
+            markerId: MarkerId("Temple Of the Tooth"),
+            position: LatLng(7.293627, 80.641350),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+            title: 'Temple Of the Tooth',
+            snippet: 'Kandy'),
+            ),
+            const Marker(
+            markerId: MarkerId("Sigiriya"),
+            position: LatLng(7.956944, 80.759720),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+            title: 'Sigiriya', snippet: 'Polonnaruwa'),
+            ),
+            const Marker(
+            markerId: MarkerId("Watadageya"),
+            position: LatLng(8.1561, 80.9962),
+            icon: BitmapDescriptor.defaultMarker,
+            infoWindow: InfoWindow(
+            title: 'Watadageya',
+            snippet: 'Polonnaruwa',
+            ),
+            )
+            },
+            ),
+          ),
+          )
+          ],
+          ),
+          ),
+          );
+  }
+
+  Widget handleCard(BuildContext context){
+    return FutureBuilder(future: fetchDataFromFirestore(),
+        builder: (context,snapshots){
+      if(snapshots.connectionState==ConnectionState.waiting){
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+              CircularProgressIndicator(color: Colors.white,
+              ),
+              SizedBox(height: 7),
+              Text("Loading Data ...",
+              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+          ],
+        );
+      }
+      else if(snapshots.hasError){
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.network_check,color: Colors.black,size: 40,),
+            SizedBox(height: 7,),
+            Text("Network error",
+                style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,)),
+          ],
+        );
+      }
+      else{
+        List<Map<String, dynamic>>?userdata = snapshots.data;
+        return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: userdata?.length,
+            itemBuilder: (context,index){
+              return StreamBuilder<Object>(
+                  stream: null,
+                  builder: (context, snapshot) {
+                    return
+                      build_card(userdata?[index]['placeName'], userdata?[index]['location'], userdata?[index]['placeImage'],userdata?[index]['info'],userdata?[index]['accomodation'],userdata?[index]['retrievedplaceIds']);
+                  }
+              );
+            });
+          }
+            });
+  }
 
   void _showAlertDialog(BuildContext context) {
     showDialog(
@@ -257,7 +255,6 @@ class _State extends State<home> {
         context, MaterialPageRoute(builder: (context) => Login())));
     Navigator.pop(context);
   }
-
 }
 
 class build_card extends StatelessWidget{
@@ -271,68 +268,73 @@ class build_card extends StatelessWidget{
   build_card(this.placeName,this.locationName,this.imageName,this.info,this.accom,this.placeId);
 
   Widget build(BuildContext context){
+    late Size mediasize=MediaQuery.of(context).size;
+
     return
-      Container(
-          width: 180,
-          margin: EdgeInsets.fromLTRB(5,0,5,0),
-          decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.black)),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                    child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
-                          imageName,
-                          fit: BoxFit.fill,
-                          height: 130,
-                          width: 180,
-                        ))),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  placeName,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Row(
-                  children: [
-                    Icon(Icons.location_on),
-                    Text(
-                      locationName,
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,accom: accom,placeId: placeId,)));
-                  },
-                  child: const Text(
-                    'Read More',
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
+      Opacity(
+        opacity: 0.75,
+        child: Container(
+        margin: EdgeInsets.fromLTRB(5,0,5,0),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.black)),
+
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Center(
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.network(
+                        imageName,
+                        fit: BoxFit.fill,
+                        height: 130,
+                        width: 180,
+                      ))),
+              SizedBox(
+                height: 4,
+              ),
+
+              Text(
+                placeName,
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  Icon(Icons.location_on),
+                  Text(
+                    locationName,
+                    style: TextStyle(fontSize: 13),
                   ),
+                ],
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,accom: accom,placeId: placeId,)));
+                },
+                child: const Text(
+                  'Read More',
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF5b7cff)),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-    );
+        ),
+        ),
+      );
   }
 }
+
 void showToast(String message) {
   Fluttertoast.showToast(
     msg: message,
@@ -344,3 +346,50 @@ void showToast(String message) {
     fontSize: 16.0,
   );
 }
+
+Future<List<String>> getDocumentIDs() async {
+  try {
+    CollectionReference collection = FirebaseFirestore.instance.collection('places');
+    QuerySnapshot querySnapshot = await collection.get();
+    List<String> documentIds =querySnapshot.docs.map((doc) => doc.id).toList();
+    return documentIds;
+  } on Exception catch (e) {
+    showToast("Network Errror");
+    rethrow;
+  }
+}
+
+Future<List<Map<String, dynamic>>> getDataFromFirestore(List<String> documentIds) async{
+  try {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    QuerySnapshot querySnapshot=await firestore.collection('places')
+        .where(FieldPath.documentId,whereIn: documentIds).get();
+
+    List<Map<String,dynamic>> userData=querySnapshot.docs
+        .map((doc) => {
+      'retrievedplaceIds':doc['placeId'],
+      'placeName':doc['name'],
+      'location':doc['location'],
+      'placeImage':doc['image'],
+      'accomodation':doc['accom'],
+      'info':doc['info'],
+    }).toList();
+    return userData;
+  } on Exception catch (e) {
+    showToast("Network Error");
+    throw e;
+  }
+}
+
+Future<List<Map<String, dynamic>>> fetchDataFromFirestore() async {
+  try {
+    List<String> documentIds = await getDocumentIDs();
+    return await getDataFromFirestore(documentIds);
+  } catch (e) {
+    print('Error fetching data: $e');
+    throw e;// Return an empty list or handle accordingly
+  }
+}
+
+
+

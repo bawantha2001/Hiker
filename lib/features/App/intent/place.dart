@@ -81,73 +81,76 @@ class _placeState extends State<place> {
   }
 
   Widget buildbottom() {
-    return SizedBox(
-      width: mediasize.width,
-      height: mediasize.height-250,
-      child: Opacity(
-        opacity: 1,
-        child: Card(
-          color: Color(0xFFffffff),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              )
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(15.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 330,
-                    margin: EdgeInsets.all(10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child:
-                        Image.network(image),
+    return Opacity(
+      opacity: 0.95,
+      child: SizedBox(
+        width: mediasize.width,
+        height: mediasize.height-250,
+        child: Opacity(
+          opacity: 1,
+          child: Card(
+            color: Color(0xFFffffff),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                )
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(15.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 330,
+                      margin: EdgeInsets.all(10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child:
+                          Image.network(image),
+                        ),
                       ),
+                    const SizedBox(height: 20),
+                     Text(placeName,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w500
+                      )
                     ),
-                  const SizedBox(height: 20),
-                   Text(placeName,
+                    const SizedBox(height: 20),
+                    Text(info,
+                      textAlign: TextAlign.justify,
                     style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w500
-                    )
-                  ),
-                  const SizedBox(height: 20),
-                  Text(info,
-                    textAlign: TextAlign.justify,
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400
-                  ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(onPressed: (){
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
-                  },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        elevation: 5
-                      ),
-                      child: Text('Book a Hotel')),
-                  ElevatedButton(onPressed: (){
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
-                  },
-                      style: ElevatedButton.styleFrom(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400
+                    ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(onPressed: (){
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
                           elevation: 5
-                      ),
-                      child: Text('Hire a guide')),
-                ],
+                        ),
+                        child: Text('Book a Hotel')),
+                    ElevatedButton(onPressed: (){
+                      Navigator.push(
+                          context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
+                    },
+                        style: ElevatedButton.styleFrom(
+                            elevation: 5
+                        ),
+                        child: Text('Hire a guide')),
+                  ],
 
-              ),
-            )
+                ),
+              )
+            ),
           ),
         ),
       ),

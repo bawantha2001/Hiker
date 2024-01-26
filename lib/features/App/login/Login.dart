@@ -66,13 +66,14 @@ class _Login extends State<Login> {
         return true;
       },
       child: Scaffold(
-        backgroundColor: const Color(0xFF5b7cff),
         body: Stack(children: [
-          Positioned(top: 0,
-              left: 50,
-              height: 280,
-              width: 280,
-              child: buildtop()),
+          Positioned.fill(
+            child: Image.asset(
+              "assets/images/b4.jpg", // Replace with your image asset path
+              fit: BoxFit.cover,
+            ),
+          ),
+
           buildAnimatedsingup(),
         ],),
       ),
@@ -84,7 +85,7 @@ class _Login extends State<Login> {
       width: mediasize.width,
       child:
       Opacity(
-        opacity: 1,
+        opacity: 0.9,
         child: Card(
           color: Color(0xFFffffff),
           shape: const RoundedRectangleBorder(
@@ -102,21 +103,13 @@ class _Login extends State<Login> {
     );
   }
 
-  Widget buildtop() {
-    return Column(
-      children: <Widget>[
-        Image.asset('assets/images/5.png', // Replace with your image asset
-            fit: BoxFit.fill),
-      ],
-    );
-  }
 
   Widget buildbottom2() {
     return SizedBox(
         width: mediasize.width,
         child:
         Opacity(
-          opacity: 1,
+          opacity: 0.9,
           child: Card(
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
@@ -141,10 +134,10 @@ class _Login extends State<Login> {
       children: [
         const Center(
           child: Text(
-            "LOGIN",
+            "Login to your account",
             style: TextStyle(
                 color: Color(0xFF5b7cff),
-                fontSize: 32,
+                fontSize: 30,
                 fontWeight: FontWeight.w500
             ),
           ),
@@ -152,16 +145,14 @@ class _Login extends State<Login> {
         Center(
           child: buildGreyText("Please login with your information"),
         ),
-        const SizedBox(height: 30,),
+        const SizedBox(height: 60,),
         buildGreyText("Email address"),
-        const SizedBox(height: 5),
         buildInputField(emailController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 10),
         buildGreyText("Password"),
-        const SizedBox(height: 5),
         buildpasswordInputField(passwordController),
         buildRemember(),
-        const SizedBox(height: 10),
+        const SizedBox(height: 40),
         buildLoginButton(),
         const SizedBox(height: 10),
         const Center(
@@ -264,13 +255,14 @@ class _Login extends State<Login> {
         backgroundColor: const Color(0xFF5b7cff),
         shadowColor: const Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
+        foregroundColor: Colors.black
       ),
       child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text("Login....    "),
           CircularProgressIndicator(color: Colors.white,),
         ],
-      ) : const Text("LOGIN"),
+      ) : const Text("LOGIN",),
 
     );
   }
@@ -284,6 +276,7 @@ class _Login extends State<Login> {
         backgroundColor: Color(0xFF5b7cff),
         shadowColor: Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
+        foregroundColor: Colors.black,
       ),
       child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -331,9 +324,9 @@ class _Login extends State<Login> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Center(
-          child: Text("Signup", style: TextStyle(
+          child: Text("Sign up free account ", style: TextStyle(
               color: Color(0xFF5b7cff),
-              fontSize: 32,
+              fontSize: 30,
               fontWeight: FontWeight.w500
           ),
           ),
@@ -342,14 +335,14 @@ class _Login extends State<Login> {
           child:
           buildGreyText("Please enter your information"),
         ),
-        const SizedBox(height: 30,),
+        const SizedBox(height: 60,),
         buildGreyText("Email address"),
         buildInputField(emailController),
         buildGreyText("Password"),
         buildpasswordInputField(passwordController),
         buildGreyText("Confirm Password"),
         buildpasswordInputField(confirmpasswordController),
-        const SizedBox(height: 30),
+        const SizedBox(height: 40),
         buildsignupButton(),
         const SizedBox(height: 20),
         buildlogin(),
