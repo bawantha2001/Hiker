@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:self_employer/features/App/login/Login.dart';
-import 'package:self_employer/features/App/login/home.dart';
 
 late Size mediasize;
 
@@ -14,7 +12,7 @@ class Loading extends StatelessWidget {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/b1.jpg"),
+            image: AssetImage("assets/images/p.jpg"),
             fit: BoxFit.cover,
           ),
         ),
@@ -35,21 +33,21 @@ class Loading extends StatelessWidget {
                       child: Image.asset("assets/images/10.png"),
                     ),
 
-                    const Text("Traveler.",
+                    const Text("Hiker.",
                       style: TextStyle(
-                          fontSize: 60,
+                          fontSize: 40,
                           color: Colors.white,
                           fontWeight: FontWeight.w900),
                       textAlign: TextAlign.center,),
 
                     const Text(
-                      "Let’s Find a Place to Visit.",
+                      "Let’s Find a Place to Explore.",
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                           color: Colors.white,),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 30,),
+                    const SizedBox(height: 30,),
                     const CircularProgressIndicator(
                       color: Colors.white,
                     ),

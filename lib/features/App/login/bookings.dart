@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class bookings extends StatefulWidget {
   String placeId;
-  bookings({required this.placeId});
+  bookings({super.key, required this.placeId});
   @override
   State<bookings> createState() => _bookingsState(placeId);
 }
@@ -20,7 +20,7 @@ class _bookingsState extends State<bookings> {
     return Center(
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
             image: AssetImage("assets/images/b4.jpg"),
             fit: BoxFit.cover,
@@ -31,7 +31,7 @@ class _bookingsState extends State<bookings> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               List<Widget> items = [];
               for (var document in snapshot.data!.docs) {
@@ -55,7 +55,7 @@ class _bookingsState extends State<bookings> {
                           child: ListTile(
                             title: Text(
                               itemName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -68,7 +68,7 @@ class _bookingsState extends State<bookings> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       )
                     ],
@@ -79,7 +79,7 @@ class _bookingsState extends State<bookings> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Available Hotels.",style: TextStyle(
+                  const Text("Available Shops.",style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
                     fontWeight: FontWeight.w700

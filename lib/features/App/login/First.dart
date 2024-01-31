@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:self_employer/features/App/login/Loading_Page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,7 +23,7 @@ class _FirstState extends State<First> {
       if (user != null) {
         Navigator.pop(context);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>home()));
+            context, MaterialPageRoute(builder: (context) =>const home()));
       }
     });
   }
@@ -34,17 +33,17 @@ class _FirstState extends State<First> {
     return MaterialApp(
       home: Scaffold(
         body:Container(
-          child: InkWell(
-          onTap: (){
-            Navigator.pop(context);
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Loading() ),);
-          },
-        ),
-            decoration: const BoxDecoration(
+          decoration: const BoxDecoration(
               image:DecorationImage(image: AssetImage("assets/images/Splash Screen.png"),
               fit: BoxFit.cover,
               )
             ),
+          child: InkWell(
+          onTap: (){
+            Navigator.pop(context);
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>const Loading() ),);
+          },
+        ),
         )
       ),
     );

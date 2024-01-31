@@ -25,7 +25,7 @@ Future <void> passwordReset() async{
     showDialog(
         context: context,
         builder: (context){
-          return AlertDialog(content:Text("Password reset link was sent to the email :- "+emailController.text));
+          return AlertDialog(content:Text("Password reset link was sent to the email :- ${emailController.text}"));
         });
   }
   on FirebaseAuthException catch (e) {
@@ -116,8 +116,8 @@ Future <void> passwordReset() async{
     return ElevatedButton(onPressed: passwordReset,
       style: ElevatedButton.styleFrom(
         elevation: 10,
-        backgroundColor: Color(0xFF5b7cff),
-        minimumSize: Size.fromHeight(50),
+        backgroundColor: const Color(0xFF5b7cff),
+        minimumSize: const Size.fromHeight(50),
       ),
       child: const Text("Reset"),
     );
@@ -125,7 +125,7 @@ Future <void> passwordReset() async{
 
   Widget buildInputField(TextEditingController controller,
       {isPassword=false}){
-    return Container(
+    return SizedBox(
       height: 50,
       child: TextField(
         controller: controller,

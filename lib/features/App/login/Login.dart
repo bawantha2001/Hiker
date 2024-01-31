@@ -1,6 +1,7 @@
 // ignore: avoid_web_libraries_in_flutter
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:self_employer/features/App/login/ForgotPasswordPage.dart';
 import 'package:self_employer/features/App/login/home.dart';
@@ -28,7 +29,7 @@ class _Login extends State<Login> {
       if (user != null) {
         Navigator.pop(context);
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>home()));
+            context, MaterialPageRoute(builder: (context) =>const home()));
       }
     });
 
@@ -62,14 +63,14 @@ class _Login extends State<Login> {
 
     return WillPopScope(
       onWillPop: ()async{
-        Navigator.pop(context);
+        SystemNavigator.pop();
         return true;
       },
       child: Scaffold(
         body: Stack(children: [
           Positioned.fill(
             child: Image.asset(
-              "assets/images/b4.jpg", // Replace with your image asset path
+              "assets/images/p.jpg", // Replace with your image asset path
               fit: BoxFit.cover,
             ),
           ),
@@ -87,7 +88,7 @@ class _Login extends State<Login> {
       Opacity(
         opacity: 0.9,
         child: Card(
-          color: Color(0xFFffffff),
+          color: const Color(0xFFffffff),
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(30),
@@ -166,7 +167,7 @@ class _Login extends State<Login> {
 
   Widget buildGreyText(String text) {
     return Text(text, style: const TextStyle(
-        color: Colors.black
+        color: Colors.black,fontSize: 15,
     ),);
   }
 
@@ -215,7 +216,7 @@ class _Login extends State<Login> {
               )
           ),
           suffixIcon: IconButton(
-            icon: Icon(isPassword?Icons.visibility:Icons.visibility_off), 
+            icon: Icon(isPassword?Icons.visibility_off:Icons.visibility),
             onPressed: () {
               setState(() {
                 isPassword=!isPassword;
@@ -238,7 +239,7 @@ class _Login extends State<Login> {
                   builder: (context) => const ForgotPasswordPage()));
         },
           style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF5b7cff)
+              foregroundColor: const Color(0xFF5b7cff)
           ),
           child: const Text(" Forgot password"),
         ),
@@ -259,8 +260,7 @@ class _Login extends State<Login> {
       ),
       child: isLoading ? const Row(mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Login....    "),
-          CircularProgressIndicator(color: Colors.white,),
+          CircularProgressIndicator(color: Colors.black,),
         ],
       ) : const Text("LOGIN",),
 
@@ -273,8 +273,8 @@ class _Login extends State<Login> {
     },
       style: ElevatedButton.styleFrom(
         elevation: 5,
-        backgroundColor: Color(0xFF5b7cff),
-        shadowColor: Color(0xFF5b7cff),
+        backgroundColor: const Color(0xFF5b7cff),
+        shadowColor: const Color(0xFF5b7cff),
         minimumSize: const Size.fromHeight(50),
         foregroundColor: Colors.black,
       ),
@@ -296,7 +296,7 @@ class _Login extends State<Login> {
           toggle_form();
         },
             style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF5b7cff),
+              foregroundColor: const Color(0xFF5b7cff),
             ),
             child: const Text("Create an account")),
       ],
@@ -312,7 +312,7 @@ class _Login extends State<Login> {
           toggle_form();
         },
             style: TextButton.styleFrom(
-              foregroundColor: Color(0xFF5b7cff),
+              foregroundColor: const Color(0xFF5b7cff),
             ),
             child: const Text("LOGIN")),
       ],
@@ -376,7 +376,7 @@ class _Login extends State<Login> {
       showToast("Account Created Successfully");
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) =>  home()));
+          context, MaterialPageRoute(builder: (context) =>  const home()));
       toggle_form();
       clear();
     }
@@ -476,9 +476,9 @@ class _Login extends State<Login> {
           .signInWithCredential(credential);
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => home()));
+          context, MaterialPageRoute(builder: (context) => const home()));
     } catch (e) {
-      print(e.toString() + " error");
+      print("$e error");
     }
   }
 
@@ -491,7 +491,7 @@ class _Login extends State<Login> {
 
       Navigator.pop(context);
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) =>  home()));
+          context, MaterialPageRoute(builder: (context) =>  const home()));
       toggle_form();
       clear();
     }

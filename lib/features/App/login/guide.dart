@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class guide extends StatefulWidget {
   String placeId;
-  guide({required this.placeId});
+  guide({super.key, required this.placeId});
   @override
   State<guide> createState() => _guideState(placeId);
 }
@@ -20,7 +20,7 @@ class _guideState extends State<guide> {
     return Center(
       child: Scaffold(
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/images/b4.jpg"),
                 fit: BoxFit.cover,
@@ -31,7 +31,7 @@ class _guideState extends State<guide> {
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return const CircularProgressIndicator();
               }
               List<Widget> items = [];
               for (var document in snapshot.data!.docs) {
@@ -55,7 +55,7 @@ class _guideState extends State<guide> {
                           child: ListTile(
                             title: Text(
                               itemName,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -68,7 +68,7 @@ class _guideState extends State<guide> {
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       )
                     ],
@@ -79,7 +79,7 @@ class _guideState extends State<guide> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Available Guides.",style: TextStyle(
+                  const Text("Available Guides.",style: TextStyle(
                       color: Colors.white,
                       fontSize: 30,
                       fontWeight: FontWeight.w700
