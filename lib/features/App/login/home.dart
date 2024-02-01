@@ -19,11 +19,21 @@ class _State extends State<home> {
   late Size mediasize=MediaQuery.of(context).size;
   bool issignout = false;
   Set<Marker> autoMarkers = {};
+  List<Map<String, dynamic>> filteredCardData = [];
+  List<Map<String, dynamic>> userData = [];
+  String searchText = '';
 
   @override
   void initState() {
     super.initState();
-    fetchAutoMarkersFromFirestore();// Call super.initState() first
+    fetchAutoMarkersFromFirestore();
+    fetchDataFromFirestore().then((data) {
+      setState(() {
+        userData = data;
+        filteredCardData = data;
+      });
+    });
+    // Call super.initState() first
     // Call your function directly
     // TODO: implement initState
   }
@@ -90,18 +100,21 @@ class _State extends State<home> {
           Opacity(
             opacity: 0.7,
             child: TextField(
-            style: const TextStyle(
-            color: Colors.black, fontWeight: FontWeight.bold),
-            decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            ),
-            hintText: "Ex:Sigiriya ",
-            prefixIcon: const Icon(Icons.search),
-            prefixIconColor: Colors.black),
-            ),
+              onChanged: (text) {
+                filterCards(text);
+              },
+              style: const TextStyle(
+                  color: Colors.black, fontWeight: FontWeight.bold),
+              decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.white,
+              border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10.0),
+              ),
+              hintText: "Ex:Sigiriya ",
+              prefixIcon: const Icon(Icons.search),
+              prefixIconColor: Colors.black),
+              ),
           ),
 
           const Padding(
@@ -130,31 +143,41 @@ class _State extends State<home> {
           );
           }
           ),
-          SizedBox(
-            height: 20,
-          ),
 
-          SizedBox(
-          height: mediasize.height,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(16.0),
-            child: GoogleMap(
-              myLocationButtonEnabled: true,
-              rotateGesturesEnabled: true,
-              trafficEnabled:true,
-              compassEnabled: true,
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(7.8731, 80.7718),
-                zoom: 8,
+            SizedBox(
+              height: 20,
             ),
-            markers: autoMarkers,
+
+            SizedBox(
+            height: mediasize.height,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16.0),
+              child: GoogleMap(
+                myLocationButtonEnabled: true,
+                rotateGesturesEnabled: true,
+                trafficEnabled:true,
+                compassEnabled: true,
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(7.8731, 80.7718),
+                  zoom: 8,
+              ),
+              markers: autoMarkers,
+              ),
             ),
-          ),
-          )
+            )
           ],
           ),
           ),
           );
+  }
+
+  void filterCards(String searchText) {
+
+    setState(() {
+      filteredCardData = userData.where((card) =>
+          card['placeName'].toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    });
   }
 
   Future<void> fetchAutoMarkersFromFirestore() async {
@@ -217,13 +240,20 @@ class _State extends State<home> {
         List<Map<String, dynamic>>?userdata = snapshots.data;
         return ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: userdata?.length,
+            itemCount: filteredCardData?.length,
             itemBuilder: (context,index){
               return StreamBuilder<Object>(
                   stream: null,
                   builder: (context, snapshot) {
                     return
-                      build_card(userdata?[index]['placeName'], userdata?[index]['location'], userdata?[index]['placeImage'],userdata?[index]['info'],userdata?[index]['retrievedplaceIds'],userdata?[index]['maplink']);
+                      build_card(
+                        filteredCardData[index]['placeName'],
+                        filteredCardData[index]['location'],
+                        filteredCardData[index]['placeImage'],
+                        filteredCardData[index]['info'],
+                        filteredCardData[index]['retrievedplaceIds'],
+                        filteredCardData[index]['maplink'],
+                      );
                   }
               );
             });
@@ -265,7 +295,7 @@ class _State extends State<home> {
 
 }
 
-class build_card extends StatefulWidget{
+class build_card extends StatelessWidget{
   final String placeName;
   final String locationName;
   final String imageName;
@@ -275,11 +305,6 @@ class build_card extends StatefulWidget{
 
   const build_card(this.placeName,this.locationName,this.imageName,this.info,this.placeId,this.maplink,{super.key});
 
-  @override
-  State<build_card> createState() => _build_cardState();
-}
-
-class _build_cardState extends State<build_card> {
   @override
   Widget build(BuildContext context){
     return
@@ -302,7 +327,7 @@ class _build_cardState extends State<build_card> {
                       child: Wrap(
                         children: [
                           Image.network(
-                            widget.imageName,
+                            imageName,
                             fit: BoxFit.fill,
                             height: 130,
                             errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
@@ -340,7 +365,7 @@ class _build_cardState extends State<build_card> {
               Wrap(
                 children: [
                   Text(
-                    widget.placeName,
+                    placeName,
                     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ],
@@ -354,7 +379,7 @@ class _build_cardState extends State<build_card> {
                     children: [
                       const Icon(Icons.location_on),
                       Text(
-                        widget.locationName,
+                        locationName,
                         style: const TextStyle(fontSize: 13),
                       ),
                     ],
@@ -365,7 +390,7 @@ class _build_cardState extends State<build_card> {
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>place(placeName: widget.placeName, image: widget.imageName, info: widget.info,placeId: widget.placeId,maplink: widget.maplink)));
+                      MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,placeId: placeId,maplink: maplink)));
                 },
                 child: const Text(
                   'Read More',
