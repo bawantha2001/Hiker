@@ -309,7 +309,7 @@ class build_card extends StatelessWidget{
   Widget build(BuildContext context){
     return
       Opacity(
-        opacity: 0.75,
+        opacity: 0.8,
         child: Container(
         margin: const EdgeInsets.fromLTRB(5,0,5,0),
         decoration: BoxDecoration(
@@ -330,6 +330,7 @@ class build_card extends StatelessWidget{
                             imageName,
                             fit: BoxFit.fill,
                             height: 130,
+                            width: 200,
                             errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                               return const SizedBox(
                                 height: 130,
