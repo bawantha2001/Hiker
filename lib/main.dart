@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:self_employer/features/App/login/Loading_Page.dart';
 import 'package:flutter/material.dart';
-import 'package:self_employer/features/App/login/Login.dart';
+import 'package:self_employer/features/App/login/home.dart';
 
 
 
@@ -33,7 +33,7 @@ class MyAppnext extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return  const MaterialApp(
-      home:Login(),
+      home:home(),
       debugShowCheckedModeBanner: false,
     );
   }

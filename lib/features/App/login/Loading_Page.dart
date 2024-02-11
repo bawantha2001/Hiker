@@ -33,7 +33,7 @@ class Loading extends StatelessWidget {
                       child: Image.asset("assets/images/10.png"),
                     ),
 
-                    const Text("Hiker.",
+                    const Text("SL Hiker.",
                       style: TextStyle(
                           fontSize: 40,
                           color: Colors.white,

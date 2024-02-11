@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
-        android:label="Hiker"
+        android:label="SL Hiker"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
