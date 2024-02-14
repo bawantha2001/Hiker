@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:self_employer/features/App/intent/place.dart';
 
 class home extends StatefulWidget {
@@ -20,10 +21,33 @@ class _State extends State<home> {
   List<Map<String, dynamic>> filteredCardData = [];
   List<Map<String, dynamic>> userData = [];
   String searchText = '';
+  bool isBannerloaded=false;
+  late BannerAd bannerAd;
+
+  initializedBannerAD()async{
+    bannerAd = BannerAd(size: AdSize.banner,
+        adUnitId: 'ca-app-pub-8280404068654201/4880902330',
+        listener: BannerAdListener(
+          onAdLoaded: (ad){
+            setState(() {
+              isBannerloaded=true;
+            });
+          },
+          onAdFailedToLoad: (ad,error){
+            ad.dispose();
+            isBannerloaded=false;
+            print(error);
+        }
+        ),
+        request: AdRequest());
+
+    bannerAd.load();
+  }
 
   @override
   void initState() {
     super.initState();
+    initializedBannerAD();
     fetchAutoMarkersFromFirestore();
     fetchDataFromFirestore().then((data) {
       setState(() {
@@ -67,6 +91,10 @@ class _State extends State<home> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(
+              height:50,
+              child: isBannerloaded==true?AdWidget(ad: bannerAd):SizedBox(),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
@@ -233,7 +261,7 @@ class _State extends State<home> {
               Opacity(
                 opacity: 0.8,
                 child: Text("Loading Data ...",
-                style: TextStyle(fontSize:18, fontWeight: FontWeight.bold,color: Colors.white)),
+                style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
               ),
           ],
         );
@@ -261,8 +289,8 @@ class _State extends State<home> {
                       Icon(Icons.location_off_outlined,color: Colors.red,size: 60),
                       Opacity(
                         opacity: 0.8,
-                        child: Text("Location not found.",
-                            style: TextStyle(fontSize:18, fontWeight: FontWeight.bold,color: Colors.white)),
+                        child: Text("Unable to findour search location.",
+                            style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
                       ),
                     ],
                   ),
@@ -389,18 +417,21 @@ class build_card extends StatelessWidget{
                   ),
                 ],
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,placeId: placeId,maplink: maplink)));
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black54,
+                ),
                 child: const Text(
                   'Read More',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF5b7cff)),
+                      color: Colors.white),
                 ),
               ),
             ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class bookings extends StatefulWidget {
   String placeId;
@@ -15,6 +16,36 @@ class _bookingsState extends State<bookings> {
 
   final _firestore = FirebaseFirestore.instance;
   late Size mediasize=MediaQuery.of(context).size;
+
+   bool isIntersitalLoaded=false;
+   bool isBannerloaded=false;
+   late BannerAd bannerAd;
+   late InterstitialAd interstitialAd;
+
+   adloaded()async{
+     InterstitialAd.load(adUnitId: 'ca-app-pub-8280404068654201/8720376317',
+         request: AdRequest(),
+         adLoadCallback: InterstitialAdLoadCallback(
+             onAdLoaded: (ad){
+               setState(() {
+                 interstitialAd=ad;
+                 isIntersitalLoaded=true;
+                 interstitialAd.show();
+               });
+             },
+             onAdFailedToLoad: (error){
+               print(error);
+               isIntersitalLoaded=false;
+             }
+         ));
+   }
+
+   @override
+   void initState() {
+     // TODO: implement initState
+     super.initState();
+     adloaded();
+   }
 
   Future<List<Widget>> fetchData() async {
     QuerySnapshot snapshot = await _firestore.collection('places/'+placeid+'/Bookings').get();
@@ -85,7 +116,7 @@ class _bookingsState extends State<bookings> {
                 future: fetchData(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return  Column(
+                    return  const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         CircularProgressIndicator(
@@ -115,7 +146,7 @@ class _bookingsState extends State<bookings> {
                             Container(
                                 height: mediasize.height,
                                 width: mediasize.width,
-                                child: Column(
+                                child: const Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(Icons.error_sharp,color: Colors.red,size: 60),

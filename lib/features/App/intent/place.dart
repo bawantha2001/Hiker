@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:self_employer/features/App/login/home.dart';
 import 'package:self_employer/features/App/login/bookings.dart';
 import 'package:self_employer/features/App/login/guide.dart';
@@ -33,10 +34,55 @@ class _placeState extends State<place> {
   final _db=FirebaseFirestore.instance;
   late Future<List<String>> documentIds;
 
+  bool isIntersitalLoaded=false;
+  bool isBannerloaded=false;
+  late BannerAd bannerAd;
+  late InterstitialAd interstitialAd;
+
+  adloaded()async{
+    InterstitialAd.load(adUnitId: 'ca-app-pub-8280404068654201/8720376317',
+        request: AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+            onAdLoaded: (ad){
+              setState(() {
+                interstitialAd=ad;
+                isIntersitalLoaded=true;
+                interstitialAd.show();
+              });
+            },
+            onAdFailedToLoad: (error){
+              print(error);
+              isIntersitalLoaded=false;
+            }
+            ));
+  }
+
+  initializedBannerAD()async{
+    bannerAd = BannerAd(size: AdSize.banner,
+        adUnitId: 'ca-app-pub-8280404068654201/4880902330',
+        listener: BannerAdListener(
+            onAdLoaded: (ad){
+              setState(() {
+                isBannerloaded=true;
+              });
+            },
+            onAdFailedToLoad: (ad,error){
+              ad.dispose();
+              isBannerloaded=false;
+              print(error);
+            }
+        ),
+        request: AdRequest());
+
+    bannerAd.load();
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    initializedBannerAD();
+    adloaded();
   }
 
   void toggle_form() {
@@ -69,103 +115,115 @@ class _placeState extends State<place> {
               fit: BoxFit.cover,
             ),
           ),
-          child: Column(
-            children: [
-              const SizedBox(height: 250,),
-              buildbottom(),
-            ],
-          )
-           /* add child content here */,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height:50,
+                    child: isBannerloaded==true?AdWidget(ad: bannerAd):SizedBox(),
+                  ),
+                  const SizedBox(
+                    height:250,),
+                  buildbottom(),
+                ],
+              ),
+            ),
+          ) /* add child content here */,
         ),
       ),
     );
   }
 
   Widget buildbottom() {
-    return SizedBox(
-      width: mediasize.width,
-      height: mediasize.height-250,
-      child: Opacity(
-        opacity: 1,
-        child: Card(
-          color: const Color(0xFFffffff),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30),
-                topRight: Radius.circular(30),
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              )
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 330,
-                    margin: const EdgeInsets.all(10),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child:
-                        Image.network(image),
-                      ),
-                    ),
-                  const SizedBox(height: 20),
-                   Text(placeName,
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w500
-                    )
-                  ),
-                  const SizedBox(height: 20),
-                  Text(info,
-                    textAlign: TextAlign.justify,
-                  style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w400
-                  ),
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(onPressed: (){
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
-                  },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text('Hire camping items')),
-                  const SizedBox(height: 5,),
-                  ElevatedButton(onPressed: (){
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
-                  },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-
-                      ),
-                      child: const Text('Hire a guide')),
-
-                  const SizedBox(height: 5,),
-                  ElevatedButton(onPressed: (){
-                    _openGoogleMaps();
-                  },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
-
-                      ),
-                      child:  Text("Direction to $placeName")),
-                ],
-
+    return Wrap(
+      children: [
+        SizedBox(
+          child: Opacity(
+            opacity: 1,
+            child: Card(
+              color: const Color(0xFFffffff),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(30),
+                    topRight: Radius.circular(30),
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30),
+                  )
               ),
-            )
+              child: Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 330,
+                      margin: const EdgeInsets.all(10),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child:
+                          Image.network(image),
+                        ),
+                      ),
+                    const SizedBox(height: 20),
+                     Text(placeName,
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w500
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    Text(info,
+                      textAlign: TextAlign.justify,
+                    style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400
+                    ),
+                    ),
+
+                    const SizedBox(height: 20),
+                    ElevatedButton(onPressed: (){
+
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                        ),
+                        child: const Text('Hire camping items')),
+                    const SizedBox(height: 5,),
+
+                    ElevatedButton(onPressed: (){
+
+                        Navigator.push(
+                            context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
+
+                        ),
+                        child: const Text('Hire a guide')),
+
+                    const SizedBox(height: 5,),
+                    ElevatedButton(onPressed: (){
+                      _openGoogleMaps();
+                    },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                          foregroundColor: Colors.white,
+
+                        ),
+                        child:  Text("Direction to $placeName")),
+                  ],
+
+                )
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 
