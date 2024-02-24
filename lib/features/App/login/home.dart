@@ -23,6 +23,7 @@ class _State extends State<home> {
   String searchText = '';
   bool isBannerloaded=false;
   late BannerAd bannerAd;
+  late GoogleMapController mapController;
 
   initializedBannerAD()async{
     bannerAd = BannerAd(size: AdSize.banner,
@@ -91,72 +92,57 @@ class _State extends State<home> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              height:50,
-              child: isBannerloaded==true?AdWidget(ad: bannerAd):SizedBox(),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: Image.asset("assets/images/10.png"),
-                    ),
-                    const SizedBox(width: 2,),
-                    const Opacity(
-                      opacity: 0.8,
-                      child: Text("SL Hiker",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 25.0,
-                          fontWeight: FontWeight.bold,
-                        ),
+            isBannerloaded==true?SizedBox(
+                height: 50,
+                child: AdWidget(ad: bannerAd)):SizedBox(),
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    height: 40,
+                    child: Image.asset("assets/images/10.png"),
+                  ),
+                  const SizedBox(width: 2,),
+                  const Opacity(
+                    opacity: 0.8,
+                    child: Text("SL Hiker",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
 
           Opacity(
             opacity: 0.8,
-            child: TextField(
-              onChanged: (text) {
-                filterCards(text);
-              },
-              style: const TextStyle(
-                  color: Colors.black, fontWeight: FontWeight.bold),
-              decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.white,
-              border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              ),
-              hintText: "Search",
-              prefixIcon: const Icon(Icons.search),
-              prefixIconColor: Colors.black),
-              ),
+            child: Container(
+              margin: EdgeInsets.only(bottom: 10,left: 5,right: 5),
+              child: TextField(
+                onChanged: (text) {
+                  filterCards(text);
+                },
+                style: const TextStyle(
+                    color: Colors.black,fontSize: 15),
+                decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                ),
+                hintText: "Search the best hiking routes in Sri Lanka",
+                prefixIcon: const Icon(Icons.search),
+                prefixIconColor: Colors.black),
+                ),
+            ),
           ),
 
-          const Padding(
-          padding: EdgeInsets.fromLTRB(0,20,0,0),
-          child: Center(
-          child: Opacity(
-            opacity: 0.8,
-            child: Text("Best hiking routes in Sri Lanka",
-            style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 20.0,
-            color: Colors.white,
-            )),
-          ),
-          ),
-          ),
           ],
           )),
 
@@ -180,23 +166,29 @@ class _State extends State<home> {
             SizedBox(
             height: mediasize.height,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(16.0),
-              child: InteractiveViewer(
-                maxScale: 5.0,
-                child: GoogleMap(
-                  myLocationButtonEnabled: true,
-                  rotateGesturesEnabled: true,
-                  trafficEnabled:true,
-                  compassEnabled: true,
-                  zoomGesturesEnabled: true,
-                  zoomControlsEnabled: false,
-                  scrollGesturesEnabled: true,
-                  initialCameraPosition: const CameraPosition(
-                    target: LatLng(7.8731, 80.7718),
-                    zoom: 8,
+              borderRadius: BorderRadius.circular(12.0),
+              child: GoogleMap(
+                mapType: MapType.terrain,
+                onMapCreated: (controller) {
+                  setState(() {
+                    mapController = controller;
+                  });
+
+                },
+                initialCameraPosition: const CameraPosition(
+                  target: LatLng(7.8731, 80.7718),
+                  zoom: 8.0,
                 ),
+                zoomControlsEnabled: true,
+                scrollGesturesEnabled: true,
+                zoomGesturesEnabled: true,
+                rotateGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                mapToolbarEnabled: true,
+                compassEnabled: true,
                 markers: autoMarkers,
-                ),
               ),
             ),
             )
@@ -216,6 +208,7 @@ class _State extends State<home> {
   }
 
   Future<void> fetchAutoMarkersFromFirestore() async {
+    var markIcon = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(), 'assets/images/mount.png');
     try {
       List<Map<String, dynamic>> userData = await fetchlatlngDataFromFirestore();
       for (int index=0;index<userData.length;index++) {
@@ -228,7 +221,7 @@ class _State extends State<home> {
             Marker(
               markerId: MarkerId(title),
               position: LatLng(latitude, longitude),
-              icon: BitmapDescriptor.defaultMarker,
+              icon: markIcon,
               infoWindow: InfoWindow(
                 title: title,
                 snippet: userData[index]['location'],
@@ -344,98 +337,95 @@ class build_card extends StatelessWidget{
         margin: const EdgeInsets.fromLTRB(5,0,5,0),
         decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.black)),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white,width: 2)),
 
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              Center(
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Wrap(
-                        children: [
-                          Image.network(
-                            imageName,
-                            fit: BoxFit.fill,
-                            height: 130,
-                            width: 200,
-                            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+        child: Column(
+          children: [
+            Center(
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Wrap(
+                      children: [
+                        Image.network(
+                          imageName,
+                          fit: BoxFit.fill,
+                          height: 130,
+                          width: 200,
+                          errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                            return const SizedBox(
+                              height: 130,
+                              child: Icon(
+                                Icons.error,
+                                size: 40,
+                                color: Colors.red,
+                              ),
+                            ); // Display an error icon on image load failure.
+                          },
+                          loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) {
+                              return child; // Image is fully loaded, show it.
+                            } else {
                               return const SizedBox(
-                                height: 130,
-                                child: Icon(
-                                  Icons.error,
-                                  size: 40,
-                                  color: Colors.red,
-                                ),
-                              ); // Display an error icon on image load failure.
-                            },
-                            loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child; // Image is fully loaded, show it.
-                              } else {
-                                return const SizedBox(
-                                    height: 130,
-                                    width: 50,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        CircularProgressIndicator(backgroundColor: Colors.transparent,color: Colors.black,),
-                                      ],
-                                    )); // Display a loading indicator.
-                              }
-                            },
-                          ),
-                        ],
-                      ))),
-              const SizedBox(
-                height: 4,
-              ),
+                                  height: 130,
+                                  width: 50,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(backgroundColor: Colors.transparent,color: Colors.black,),
+                                    ],
+                                  )); // Display a loading indicator.
+                            }
+                          },
+                        ),
+                      ],
+                    ))),
+            const SizedBox(
+              height: 4,
+            ),
 
-              Wrap(
-                children: [
-                  Text(
-                    placeName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 4,
-              ),
-              Wrap(
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.location_on),
-                      Text(
-                        locationName,
-                        style: const TextStyle(fontSize: 13),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,placeId: placeId,maplink: maplink)));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black54,
+            Wrap(
+              children: [
+                Text(
+                  placeName,
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                child: const Text(
-                  'Read More',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+              ],
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            Wrap(
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.location_on),
+                    Text(
+                      locationName,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
                 ),
+              ],
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,placeId: placeId,maplink: maplink)));
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black54,
               ),
-            ],
-          ),
+              child: const Text(
+                'Read More',
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+          ],
         ),
         ),
       );

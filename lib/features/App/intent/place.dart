@@ -35,8 +35,6 @@ class _placeState extends State<place> {
   late Future<List<String>> documentIds;
 
   bool isIntersitalLoaded=false;
-  bool isBannerloaded=false;
-  late BannerAd bannerAd;
   late InterstitialAd interstitialAd;
 
   adloaded()async{
@@ -57,31 +55,10 @@ class _placeState extends State<place> {
             ));
   }
 
-  initializedBannerAD()async{
-    bannerAd = BannerAd(size: AdSize.banner,
-        adUnitId: 'ca-app-pub-8280404068654201/4880902330',
-        listener: BannerAdListener(
-            onAdLoaded: (ad){
-              setState(() {
-                isBannerloaded=true;
-              });
-            },
-            onAdFailedToLoad: (ad,error){
-              ad.dispose();
-              isBannerloaded=false;
-              print(error);
-            }
-        ),
-        request: AdRequest());
-
-    bannerAd.load();
-  }
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initializedBannerAD();
     adloaded();
   }
 
@@ -116,13 +93,9 @@ class _placeState extends State<place> {
             ),
           ),
           child: SafeArea(
-            child: SingleChildScrollView(
+            child: Expanded(
               child: Column(
                 children: [
-                  SizedBox(
-                    height:50,
-                    child: isBannerloaded==true?AdWidget(ad: bannerAd):SizedBox(),
-                  ),
                   const SizedBox(
                     height:250,),
                   buildbottom(),
@@ -136,36 +109,38 @@ class _placeState extends State<place> {
   }
 
   Widget buildbottom() {
-    return Wrap(
-      children: [
-        SizedBox(
-          child: Opacity(
-            opacity: 1,
-            child: Card(
-              color: const Color(0xFFffffff),
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30),
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),
-                  )
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
+    return Expanded(
+      child: SizedBox(
+        child: Opacity(
+          opacity: 1,
+          child: Card(
+            color: const Color(0xFFffffff),
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                  bottomLeft: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                )
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: SingleChildScrollView(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      width: 330,
+                      width: mediasize.width,
                       margin: const EdgeInsets.all(10),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child:
-                          Image.network(image),
+                          Image.network(image,
+                              fit: BoxFit.fill),
                         ),
                       ),
-                    const SizedBox(height: 20),
+
                      Text(placeName,
                       style: const TextStyle(
                         fontSize: 32,
@@ -218,12 +193,12 @@ class _placeState extends State<place> {
                         child:  Text("Direction to $placeName")),
                   ],
 
-                )
-              ),
+                ),
+              )
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 

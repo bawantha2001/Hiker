@@ -14,35 +14,34 @@ class _guideState extends State<guide> {
   String placeid;
   _guideState(this.placeid);
 
-  bool isIntersitalLoaded=false;
   bool isBannerloaded=false;
   late BannerAd bannerAd;
-  late InterstitialAd interstitialAd;
 
-  adloaded()async{
-    InterstitialAd.load(adUnitId: 'ca-app-pub-8280404068654201/8720376317',
-        request: AdRequest(),
-        adLoadCallback: InterstitialAdLoadCallback(
+  initializedBannerAD()async{
+    bannerAd = BannerAd(size: AdSize.banner,
+        adUnitId: 'ca-app-pub-8280404068654201/4880902330',
+        listener: BannerAdListener(
             onAdLoaded: (ad){
               setState(() {
-                interstitialAd=ad;
-                isIntersitalLoaded=true;
-                interstitialAd.show();
+                isBannerloaded=true;
               });
             },
-            onAdFailedToLoad: (error){
-              isIntersitalLoaded=false;
+            onAdFailedToLoad: (ad,error){
+              ad.dispose();
+              isBannerloaded=false;
               print(error);
-
             }
-        ));
+        ),
+        request: AdRequest());
+
+    bannerAd.load();
   }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    adloaded();
+    initializedBannerAD();
   }
 
   final _firestore = FirebaseFirestore.instance;
@@ -113,88 +112,97 @@ class _guideState extends State<guide> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: FutureBuilder(
-                future: fetchData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return  const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(
-                          color: Colors.white,
-                        ),
-                        Text("Loading Data ...",
-                            style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
-                      ],
-                    );
-                  }
-
-                  else{
-                    List<Widget> items = snapshot.data as List<Widget>;
-                    if(items.isEmpty){
-                      return  SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              "Available Guides",
-                              style: TextStyle(
+              child: Column(
+                children: [
+                  isBannerloaded==true?SizedBox(
+                      height: 50,
+                      child: AdWidget(ad: bannerAd)):SizedBox(),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: fetchData(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return  const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircularProgressIndicator(
                                 color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
                               ),
-                            ),
-                            Container(
-                                height: mediasize.height,
-                                width: mediasize.width,
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(Icons.error_sharp,color: Colors.red,size: 60),
-                                    Text("No available guides found",
-                                        style: TextStyle(fontSize:20, fontWeight: FontWeight.bold,color: Colors.white)),
-                                  ],
-                                )),
-                          ],
-                        ),
-                      );
-                    }
-                    else{
-                      return SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Available Guides",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 30,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Container(
-                              height: mediasize.height,
-                              width: mediasize.width,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(
-                                  width: 1,
-                                  color: Colors.transparent,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListView(
-                                  children: items,
-                                ),
+                              Text("Loading Data ...",
+                                  style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                            ],
+                          );
+                        }
 
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-                  }
-                },
+                        else{
+                          List<Widget> items = snapshot.data as List<Widget>;
+                          if(items.isEmpty){
+                            return  Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  "Available Guides",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                      height: mediasize.height,
+                                      width: mediasize.width,
+                                      child: const Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.error_sharp,color: Colors.red,size: 50),
+                                          Text("No available guides found",
+                                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                                        ],
+                                      )),
+                                ),
+                              ],
+                            );
+                          }
+                          else{
+                            return Column(
+                              children: [
+                                const Text(
+                                  "Available Guides",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    height: mediasize.height,
+                                    width: mediasize.width,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.transparent,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: ListView(
+                                        children: items,
+                                      ),
+
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
