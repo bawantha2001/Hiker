@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:self_employer/features/App/intent/place.dart';
-import 'package:self_employer/features/App/login/Login.dart';
 
 class home extends StatefulWidget {
   const home({super.key});
@@ -22,10 +21,33 @@ class _State extends State<home> {
   List<Map<String, dynamic>> filteredCardData = [];
   List<Map<String, dynamic>> userData = [];
   String searchText = '';
+  bool isBannerloaded=false;
+  late BannerAd bannerAd;
+
+  initializedBannerAD()async{
+    bannerAd = BannerAd(size: AdSize.banner,
+        adUnitId: 'ca-app-pub-8280404068654201/4880902330',
+        listener: BannerAdListener(
+          onAdLoaded: (ad){
+            setState(() {
+              isBannerloaded=true;
+            });
+          },
+          onAdFailedToLoad: (ad,error){
+            ad.dispose();
+            isBannerloaded=false;
+            print(error);
+        }
+        ),
+        request: AdRequest());
+
+    bannerAd.load();
+  }
 
   @override
   void initState() {
     super.initState();
+    initializedBannerAD();
     fetchAutoMarkersFromFirestore();
     fetchDataFromFirestore().then((data) {
       setState(() {
@@ -41,22 +63,16 @@ class _State extends State<home> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async{
-        _showAlertDialog(context);
-        return true;
-      },
-      child: Scaffold(
-        body: Container(
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/p.jpg"),
-              fit: BoxFit.cover,
-            ),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/p.jpg"),
+            fit: BoxFit.cover,
           ),
-          child: SafeArea(
-            child: build_body(context),
-          ),
+        ),
+        child: SafeArea(
+          child: build_body(context),
         ),
       ),
     );
@@ -75,30 +91,40 @@ class _State extends State<home> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-          const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Center(
-          child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-          Icon(Icons.hiking_rounded,color: Color(0xFF5b7cff),size: 30,),
-          SizedBox(width: 2,),
-          Text(
-          "Hiker",
-          style: TextStyle(
-          color: Color(0xFF5b7cff),
-          fontSize: 25.0,
-          fontWeight: FontWeight.bold,
-          ),
-          ),
-          ],
-          ),
-          ),
-          ),
+            SizedBox(
+              height:50,
+              child: isBannerloaded==true?AdWidget(ad: bannerAd):SizedBox(),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: Image.asset("assets/images/10.png"),
+                    ),
+                    const SizedBox(width: 2,),
+                    const Opacity(
+                      opacity: 0.8,
+                      child: Text("SL Hiker",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
 
           Opacity(
-            opacity: 0.7,
+            opacity: 0.8,
             child: TextField(
               onChanged: (text) {
                 filterCards(text);
@@ -111,7 +137,7 @@ class _State extends State<home> {
               border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10.0),
               ),
-              hintText: "Ex:Sigiriya ",
+              hintText: "Search",
               prefixIcon: const Icon(Icons.search),
               prefixIconColor: Colors.black),
               ),
@@ -120,12 +146,15 @@ class _State extends State<home> {
           const Padding(
           padding: EdgeInsets.fromLTRB(0,20,0,0),
           child: Center(
-          child: Text("Best hiking routes in Sri Lanka.",
-          style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 20.0,
-          color: Colors.green,
-          )),
+          child: Opacity(
+            opacity: 0.8,
+            child: Text("Best hiking routes in Sri Lanka",
+            style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+            color: Colors.white,
+            )),
+          ),
           ),
           ),
           ],
@@ -144,7 +173,7 @@ class _State extends State<home> {
           }
           ),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
@@ -152,16 +181,22 @@ class _State extends State<home> {
             height: mediasize.height,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16.0),
-              child: GoogleMap(
-                myLocationButtonEnabled: true,
-                rotateGesturesEnabled: true,
-                trafficEnabled:true,
-                compassEnabled: true,
-                initialCameraPosition: const CameraPosition(
-                  target: LatLng(7.8731, 80.7718),
-                  zoom: 8,
-              ),
-              markers: autoMarkers,
+              child: InteractiveViewer(
+                maxScale: 5.0,
+                child: GoogleMap(
+                  myLocationButtonEnabled: true,
+                  rotateGesturesEnabled: true,
+                  trafficEnabled:true,
+                  compassEnabled: true,
+                  zoomGesturesEnabled: true,
+                  zoomControlsEnabled: false,
+                  scrollGesturesEnabled: true,
+                  initialCameraPosition: const CameraPosition(
+                    target: LatLng(7.8731, 80.7718),
+                    zoom: 8,
+                ),
+                markers: autoMarkers,
+                ),
               ),
             ),
             )
@@ -217,11 +252,17 @@ class _State extends State<home> {
         return const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-              CircularProgressIndicator(color: Colors.white,
+              Opacity(
+                opacity: 0.8,
+                child: CircularProgressIndicator(color: Colors.white,
+                ),
               ),
               SizedBox(height: 7),
-              Text("Loading Data ...",
-              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+              Opacity(
+                opacity: 0.8,
+                child: Text("Loading Data ...",
+                style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+              ),
           ],
         );
       }
@@ -238,60 +279,49 @@ class _State extends State<home> {
       }
       else{
         List<Map<String, dynamic>>?userdata = snapshots.data;
-        return ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: filteredCardData?.length,
-            itemBuilder: (context,index){
-              return StreamBuilder<Object>(
-                  stream: null,
-                  builder: (context, snapshot) {
-                    return
-                      build_card(
-                        filteredCardData[index]['placeName'],
-                        filteredCardData[index]['location'],
-                        filteredCardData[index]['placeImage'],
-                        filteredCardData[index]['info'],
-                        filteredCardData[index]['retrievedplaceIds'],
-                        filteredCardData[index]['maplink'],
-                      );
-                  }
+        if(filteredCardData.isEmpty){
+          return
+              const Center(
+                child: SizedBox(
+                  height: 130,
+                  child: Column(
+                    children: [
+                      Icon(Icons.location_off_outlined,color: Colors.red,size: 60),
+                      Opacity(
+                        opacity: 0.8,
+                        child: Text("Unable to findour search location.",
+                            style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                      ),
+                    ],
+                  ),
+                ),
               );
-            });
+        }
+        else{
+          return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: filteredCardData?.length,
+              itemBuilder: (context,index){
+                return StreamBuilder<Object>(
+                    stream: null,
+                    builder: (context, snapshot) {
+                      return
+                        build_card(
+                          filteredCardData[index]['placeName'],
+                          filteredCardData[index]['location'],
+                          filteredCardData[index]['placeImage'],
+                          filteredCardData[index]['info'],
+                          filteredCardData[index]['retrievedplaceIds'],
+                          filteredCardData[index]['maplink'],
+                        );
+                    }
+                );
+              });
+        }
           }
             });
   }
 
-  void _showAlertDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Log out'),
-          content: const Text('Do you want to log out'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                _signOut(context);
-              },
-              child: const Text('Yes'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-
-  Future<void> _signOut(BuildContext context) async {
-    try {
-      await FirebaseAuth.instance.signOut().then((value) => Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Login())));
-      Navigator.pop(context);
-    } catch (e) {
-      print('Error signing out: $e');
-      showToast("message");
-    }
-  }
 
 }
 
@@ -387,18 +417,21 @@ class build_card extends StatelessWidget{
                   ),
                 ],
               ),
-              TextButton(
+              ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context);
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) =>place(placeName: placeName, image: imageName, info: info,placeId: placeId,maplink: maplink)));
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black54,
+                ),
                 child: const Text(
                   'Read More',
                   style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF5b7cff)),
+                      color: Colors.white),
                 ),
               ),
             ],
