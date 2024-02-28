@@ -80,7 +80,8 @@ class _guideState extends State<guide> {
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      imageUrl,
+                        width: 100,height: 100,
+                        imageUrl,fit: BoxFit.fill
                     ),
                   ),
                 ),
@@ -112,71 +113,79 @@ class _guideState extends State<guide> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Column(
+              child: Wrap(
                 children: [
-                  isBannerloaded==true?SizedBox(
-                      height: 50,
-                      child: AdWidget(ad: bannerAd)):SizedBox(),
-                  Expanded(
-                    child: FutureBuilder(
-                      future: fetchData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return  const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                              Text("Loading Data ...",
-                                  style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
-                            ],
-                          );
-                        }
+                  Column(
+                    children: [
+                      isBannerloaded==true?SizedBox(
+                          height: 50,
+                          child: AdWidget(ad: bannerAd)):SizedBox(),
 
-                        else{
-                          List<Widget> items = snapshot.data as List<Widget>;
-                          if(items.isEmpty){
-                            return  Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Available Guides",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                      FutureBuilder(
+                        future: fetchData(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return  Container(
+                              height: mediasize.height,
+                              child: Center(
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                    Text("Loading Data ...",
+                                        style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                                  ],
                                 ),
-                                Expanded(
-                                  child: Container(
-                                      height: mediasize.height,
-                                      width: mediasize.width,
-                                      child: const Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Icon(Icons.error_sharp,color: Colors.red,size: 50),
-                                          Text("No available guides found",
-                                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
-                                        ],
-                                      )),
-                                ),
-                              ],
+                              ),
                             );
                           }
+
                           else{
-                            return Column(
-                              children: [
-                                const Text(
-                                  "Available Guides",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
+                            List<Widget> items = snapshot.data as List<Widget>;
+                            if(items.isEmpty){
+                              return  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Available Guides",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Container(
+
+                                  Container(
+                                    height: mediasize.height,
+                                    width: mediasize.width,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Icon(Icons.error_sharp,color: Colors.red,size: 50),
+                                        Text("No available guides found",
+                                            style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }
+                            else{
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Available Guides",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+
+                                  Container(
                                     height: mediasize.height,
                                     width: mediasize.width,
                                     decoration: BoxDecoration(
@@ -194,13 +203,13 @@ class _guideState extends State<guide> {
 
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
+                                ],
+                              );
+                            }
                           }
-                        }
-                      },
-                    ),
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

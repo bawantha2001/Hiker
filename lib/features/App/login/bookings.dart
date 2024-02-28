@@ -80,7 +80,8 @@ class _bookingsState extends State<bookings> {
                   leading: ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      imageUrl,
+                        width: 100,height: 100,
+                        imageUrl,fit: BoxFit.fill
                     ),
                   ),
                 ),
@@ -112,44 +113,50 @@ class _bookingsState extends State<bookings> {
           child: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Column(
+              child: Wrap(
                 children: [
-                  isBannerloaded==true?SizedBox(
-                      height: 50,
-                      child: AdWidget(ad: bannerAd)):SizedBox(),
-                  Expanded(
-                    child: FutureBuilder(
-                      future: fetchData(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return  const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                              Text("Loading Data ...",
-                                  style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
-                            ],
-                          );
-                        }
-                    
-                        else{
-                          List<Widget> items = snapshot.data as List<Widget>;
-                          if(items.isEmpty){
-                            return  Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Available Shops",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                  ),
+                  Column(
+                    children: [
+                      isBannerloaded==true?SizedBox(
+                          height: 50,
+                          child: AdWidget(ad: bannerAd)):SizedBox(),
+
+                      FutureBuilder(
+                        future: fetchData(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return  Container(
+                              height: mediasize.height,
+                              child: Center(
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                    Text("Loading Data ...",
+                                        style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
+                                  ],
                                 ),
-                                Expanded(
-                                  child: Container(
+                              ),
+                            );
+                          }
+
+                          else{
+                            List<Widget> items = snapshot.data as List<Widget>;
+                            if(items.isEmpty){
+                              return  Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Available Shops",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  Container(
                                       height: mediasize.height,
                                       width: mediasize.width,
                                       child: const Column(
@@ -160,24 +167,24 @@ class _bookingsState extends State<bookings> {
                                               style: TextStyle(fontSize:15, fontWeight: FontWeight.bold,color: Colors.white)),
                                         ],
                                       )),
-                                ),
-                              ],
-                            );
-                          }
-                    
-                          else{
-                            return Column(
-                              children: [
-                                const Text(
-                                  "Available Shops",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
+                                ],
+                              );
+                            }
+
+                            else{
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Text(
+                                    "Available Shops",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                ),
-                                Expanded(
-                                  child: Container(
+
+                                  Container(
                                     height: mediasize.height,
                                     width: mediasize.width,
                                     decoration: BoxDecoration(
@@ -192,17 +199,17 @@ class _bookingsState extends State<bookings> {
                                       child: ListView(
                                         children: items,
                                       ),
-                                                  
+
                                     ),
                                   ),
-                                ),
-                              ],
-                            );
+                                ],
+                              );
+                            }
+
                           }
-                    
-                        }
-                      },
-                    ),
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),

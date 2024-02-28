@@ -85,117 +85,118 @@ class _placeState extends State<place> {
         return true;
       },
       child: Scaffold(
-        body: Container(
-          decoration:  BoxDecoration(
-            image: DecorationImage(
-              image: NetworkImage(image),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: SafeArea(
-            child: Expanded(
-              child: Column(
-                children: [
-                  const SizedBox(
-                    height:250,),
-                  buildbottom(),
-                ],
+        body: Column(
+          children: [
+            Container(
+              height: mediasize.height,
+              decoration:  BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
+                ),
               ),
+              child: SafeArea(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height:250),
+                      buildbottom(),
+                    ],
+                  ),
+                ),
+              ) /* add child content here */,
             ),
-          ) /* add child content here */,
+          ],
         ),
       ),
     );
   }
 
   Widget buildbottom() {
-    return Expanded(
-      child: SizedBox(
-        child: Opacity(
-          opacity: 1,
-          child: Card(
-            color: const Color(0xFFffffff),
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
-                  bottomLeft: Radius.circular(30),
-                  bottomRight: Radius.circular(30),
-                )
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      width: mediasize.width,
-                      margin: const EdgeInsets.all(10),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child:
-                          Image.network(image,
-                              fit: BoxFit.fill),
-                        ),
-                      ),
-
-                     Text(placeName,
-                      style: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.w500
-                      )
-                    ),
-                    const SizedBox(height: 20),
-                    Text(info,
-                      textAlign: TextAlign.justify,
-                    style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w400
-                    ),
-                    ),
-
-                    const SizedBox(height: 20),
-                    ElevatedButton(onPressed: (){
-
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text('Hire camping items')),
-                    const SizedBox(height: 5,),
-
-                    ElevatedButton(onPressed: (){
-
-                        Navigator.push(
-                            context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-
-                        ),
-                        child: const Text('Hire a guide')),
-
-                    const SizedBox(height: 5,),
-                    ElevatedButton(onPressed: (){
-                      _openGoogleMaps();
-                    },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                          foregroundColor: Colors.white,
-
-                        ),
-                        child:  Text("Direction to $placeName")),
-                  ],
-
-                ),
+    return SizedBox(
+      child: Opacity(
+        opacity: 1,
+        child: Card(
+          color: const Color(0xFFffffff),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
               )
-            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(15.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: mediasize.width,
+                  margin: const EdgeInsets.all(10),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child:
+                      Image.network(image,
+                          fit: BoxFit.fill),
+                    ),
+                  ),
+            
+                 Text(placeName,
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500
+                  )
+                ),
+                const SizedBox(height: 20),
+                Text(info,
+                  textAlign: TextAlign.justify,
+                style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400
+                ),
+                ),
+            
+                const SizedBox(height: 20),
+                ElevatedButton(onPressed: (){
+            
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => bookings(placeId:placeId)));
+                },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Hire camping items')),
+                const SizedBox(height: 5,),
+            
+                ElevatedButton(onPressed: (){
+            
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => guide(placeId:placeId)));
+                },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      foregroundColor: Colors.white,
+            
+                    ),
+                    child: const Text('Hire a guide')),
+            
+                const SizedBox(height: 5,),
+                ElevatedButton(onPressed: (){
+                  _openGoogleMaps();
+                },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+            
+                    ),
+                    child:  Text("Direction to $placeName")),
+              ],
+            
+            )
           ),
         ),
       ),

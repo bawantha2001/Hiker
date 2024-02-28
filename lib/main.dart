@@ -10,7 +10,7 @@ Future main()async{
   await Firebase.initializeApp();
   await MobileAds.instance.initialize();
   runApp(const MyApp());
-  await Future.delayed(const Duration(seconds: 10));
+  await Future.delayed(const Duration(seconds: 5));
   runApp(const MyAppnext());
 
 }
